@@ -1,175 +1,145 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { User, LogOut, X } from 'lucide-react'
-import { loginBtn } from './NavBar.css'
+import { usePathname } from 'next/navigation'
+import { ChevronDown, Menu, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import {
+  activeNavLink,
+  brand,
+  brandLogo,
+  brandText,
+  desktopNav,
+  dropdown,
+  dropdownItem,
+  dropdownMenu,
+  dropdownTrigger,
+  mobileMenu,
+  mobileMenuButton,
+  mobilePanel,
+  navLink,
+  navbarInner,
+  serviceChevron,
+} from './NavBar.css'
 
-const menuItems = [
-  { label: 'My Profile', path: '/profile' },
-  { label: 'My Kundli & Reports', path: '/kundli' },
-  { label: 'My Orders', path: '/bookings' },
-  { label: 'Energy Reading', path: '/energy-reading' },
-  { label: 'Affirmations', path: '/affirmations' },
-  { label: 'My Booking', path: '/booking-consultations' },
-  { label: 'My Wallet', path: '/wallet' },
+const primaryLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'Careers', path: '/careers' },
+  { name: 'Blogs', path: '/blogs' },
 ]
 
-const remedyItems = [
-  { label: 'Remedies & Alignment Tracker', path: '/remedy-journey' },
-  { label: 'Ask a Follow-up Query', path: '/astro-chat' },
-  { label: 'My Learning & Growth', path: '/learning-growth' },
-  { label: 'Call Scheduling', path: '/call-scheduling' },
-  { label: 'My Wealth Tools', path: '/wealth-tools' },
+const serviceLinks = [
+  { name: 'Energy', path: '/energy' },
+  { name: 'Astrology', path: '/astrology' },
+  { name: 'Vastu', path: '/vastu' },
+  { name: 'Manifestation', path: '/manifestation' },
+  { name: 'Material', path: '/wealth-architecture' },
+  { name: 'Tarot Reading', path: '/tarot-reading' },
 ]
+
+const logo = {
+  src: '/assets/The Fifth Cusp_Logo.png',
+  alt: 'The Fifth Cusp',
+  width: 44,
+  height: 44,
+}
 
 export default function Navbar() {
-  const router = useRouter()
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-  const confirmRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) setIsLoggedIn(true)
-  }, [])
+    setIsMobileMenuOpen(false)
+  }, [pathname])
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false)
-      }
-      if (
-        confirmRef.current &&
-        !confirmRef.current.contains(e.target as Node) &&
-        showLogoutConfirm
-      ) {
-        setShowLogoutConfirm(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [showLogoutConfirm])
-
-  const performLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('login')
-    setIsLoggedIn(false)
-    setShowLogoutConfirm(false)
-    router.push('/login')
-  }
+  const isServicesActive = serviceLinks.some((item) => item.path === pathname)
 
   return (
-    <>
-      <nav className="navbar">
-        {!isLoggedIn && <button className={loginBtn}>LOGIN</button>}
+    <nav className="navbar">
+      <div className={navbarInner}>
+        <Link href="/" className={brand} aria-label="The Fifth Cusp home">
+          <Image
+            src={logo.src}
+            alt={logo.alt}
+            width={logo.width}
+            height={logo.height}
+            className={brandLogo}
+            priority
+          />
+          <span className={brandText}>THE FIFTH CUSP</span>
+        </Link>
 
-        {isLoggedIn && (
-          <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="flex items-center justify-center w-10 h-10 rounded-full border border-white text-white hover:bg-white hover:text-black transition-colors"
+        <div className={desktopNav}>
+          {primaryLinks.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              className={`${navLink} ${pathname === item.path ? activeNavLink : ''}`}
             >
-              <User size={18} />
+              {item.name}
+            </Link>
+          ))}
+
+          <div className={dropdown}>
+            <button
+              type="button"
+              className={`${dropdownTrigger} ${isServicesActive ? activeNavLink : ''}`}
+            >
+              Services
+              <ChevronDown size={16} className={serviceChevron} />
             </button>
-
-            {menuOpen && (
-              <div className="absolute right-0 top-12 w-64 bg-black border border-white/20 shadow-xl z-50">
-                <div className="px-4 py-3 border-b border-white/10">
-                  <p className="text-xs tracking-widest text-white/50">INSIDE THE CUSP</p>
-                  <p className="text-sm text-white mt-1">
-                    {typeof window !== 'undefined'
-                      ? localStorage.getItem('email') || 'Welcome'
-                      : 'Welcome'}
-                  </p>
-                </div>
-
-                <div className="py-2">
-                  <p className="px-4 py-1 text-xs tracking-widest text-white/40">ACCOUNT</p>
-                  {menuItems.map((item) => (
-                    <Link
-                      key={item.path}
-                      href={item.path}
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-
-                <div className="border-t border-white/10 py-2">
-                  <p className="px-4 py-1 text-xs tracking-widest text-white/40">FEATURES</p>
-                  {remedyItems.map((item) => (
-                    <Link
-                      key={item.path}
-                      href={item.path}
-                      onClick={() => setMenuOpen(false)}
-                      className="block px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-
-                <div className="border-t border-white/10 py-2">
-                  <Link
-                    href="/settings"
-                    onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                  >
-                    Settings
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setShowLogoutConfirm(true)
-                      setMenuOpen(false)
-                    }}
-                    className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors"
-                  >
-                    <LogOut size={14} /> Logout
-                  </button>
-                </div>
-              </div>
-            )}
+            <div className={dropdownMenu}>
+              {serviceLinks.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`${dropdownItem} ${pathname === item.path ? activeNavLink : ''}`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
           </div>
-        )}
-      </nav>
+        </div>
 
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div
-            ref={confirmRef}
-            className="relative bg-black border border-white/20 p-8 w-80 text-white shadow-2xl"
-          >
-            <button
-              onClick={() => setShowLogoutConfirm(false)}
-              className="absolute top-4 right-4 text-white/50 hover:text-white"
-            >
-              <X size={20} />
-            </button>
-            <h3 className="text-lg font-semibold mb-2">Confirm Logout</h3>
-            <p className="text-sm text-white/60 mb-6">Are you sure you want to logout?</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowLogoutConfirm(false)}
-                className="flex-1 py-2 border border-white/30 text-sm hover:bg-white/10 transition-colors"
+        <button
+          type="button"
+          className={mobileMenuButton}
+          onClick={() => setIsMobileMenuOpen((open) => !open)}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMobileMenuOpen}
+        >
+          {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {isMobileMenuOpen && (
+        <div className={mobilePanel}>
+          <div className={mobileMenu}>
+            {primaryLinks.map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`${navLink} ${pathname === item.path ? activeNavLink : ''}`}
               >
-                Cancel
-              </button>
-              <button
-                onClick={performLogout}
-                className="flex-1 py-2 bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
-              >
-                Logout
-              </button>
+                {item.name}
+              </Link>
+            ))}
+            <div className={mobileMenu}>
+              {serviceLinks.map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`${dropdownItem} ${pathname === item.path ? activeNavLink : ''}`}
+                >
+                  {item.name}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       )}
-    </>
+    </nav>
   )
 }

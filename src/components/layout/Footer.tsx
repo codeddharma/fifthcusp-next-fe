@@ -1,80 +1,153 @@
-import Link from 'next/link'
 import Image from 'next/image'
-import { FaWhatsapp, FaLinkedinIn, FaInstagram, FaEnvelope, FaPhoneAlt } from 'react-icons/fa'
+import Link from 'next/link'
+import type { ReactNode } from 'react'
+import { Mail, Phone } from 'lucide-react'
+import { FaInstagram, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa'
+
+const pageLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Languages', href: '/careers' },
+  { label: 'Well Beings', href: '/manifestation' },
+  { label: 'Manifestation Calendar', href: '/manifestation' },
+  { label: 'Blogs', href: '/blogs' },
+]
+
+const serviceLinks = [
+  { label: 'Energy', href: '/energy' },
+  { label: 'Manifestation', href: '/manifestation' },
+  { label: 'Vastu', href: '/vastu' },
+  { label: 'Material', href: '/wealth-architecture' },
+  { label: 'Tarot Reading', href: '/tarot-reading' },
+]
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-black text-white border-t border-white/10">
-      <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* Brand */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <Image src="/assets/logo.png" alt="The Fifth Cusp" width={48} height={48} />
-            <div>
-              <h2 className="text-lg font-bold tracking-widest">THE FIFTH CUSP</h2>
-              <p className="text-xs text-white/50">Align with your cosmic destiny</p>
+    <footer className="border-t border-violet-300/10 bg-gradient-to-b from-[#0f0825] to-[#1a1038] pt-10 text-white">
+      <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-8 px-6 pb-8">
+        <section className="min-w-[250px] flex-1">
+          <div className="mb-5 flex items-start gap-4">
+            <Image
+              src="/assets/logo.png"
+              alt="The Fifth Cusp Logo"
+              width={70}
+              height={70}
+              className="h-[70px] w-[70px] object-contain drop-shadow-[0_0_12px_rgba(183,132,247,0.4)]"
+            />
+            <div className="pt-1">
+              <h2 className="font-serif text-3xl font-semibold leading-tight tracking-wide">
+                THE FIFTH CUSP
+              </h2>
+              <p className="mt-1 text-sm italic text-[#c77dff]">
+                Align with your cosmic destiny
+              </p>
             </div>
           </div>
-          <p className="text-sm text-white/60 leading-relaxed">
-            Guiding you through cosmic pathways of Astrology, Numerology, Vastu, Tarot, and
-            Manifestation.
+
+          <p className="border-l-2 border-[#c77dff]/20 pl-3 text-sm leading-6 text-[#d0c8e9]">
+            Guiding you through cosmic pathways of Astrology, Numerology, Vastu,
+            Tarot, and Manifestation.
           </p>
-        </div>
+        </section>
 
-        {/* Links */}
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <h3 className="text-xs tracking-widest text-white/40 mb-3">PAGES</h3>
-            <ul className="space-y-2 text-sm text-white/70">
-              <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-              <li><Link href="/careers" className="hover:text-white transition-colors">Languages</Link></li>
-              <li><Link href="/manifestation" className="hover:text-white transition-colors">Well Beings</Link></li>
-              <li><Link href="/blogs" className="hover:text-white transition-colors">Blogs</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xs tracking-widest text-white/40 mb-3">SERVICES</h3>
-            <ul className="space-y-2 text-sm text-white/70">
-              <li><Link href="/energy" className="hover:text-white transition-colors">Energy</Link></li>
-              <li><Link href="/manifestation" className="hover:text-white transition-colors">Manifestation</Link></li>
-              <li><Link href="/vastu" className="hover:text-white transition-colors">Vastu</Link></li>
-              <li><Link href="/wealth-architecture" className="hover:text-white transition-colors">Material</Link></li>
-              <li><Link href="/tarot-reading" className="hover:text-white transition-colors">Tarot Reading</Link></li>
-            </ul>
-          </div>
-        </div>
+        <section className="flex min-w-[250px] flex-1 gap-8 pt-2">
+          <FooterColumn title="Pages" links={pageLinks} />
+          <FooterColumn title="Services" links={serviceLinks} />
+        </section>
 
-        {/* Connect */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-xs tracking-widest text-white/40">STAY CONNECTED</h3>
-          <div className="flex gap-4 text-lg">
-            <a href="https://wa.me/919999999999" target="_blank" rel="noreferrer" className="text-white/60 hover:text-white transition-colors">
+        <section className="min-w-[250px] flex-1 pt-2">
+          <h3 className="mb-4 border-b border-violet-300/20 pb-2 text-base font-medium">
+            <span className="mr-2 text-[#c77dff]">✦</span>
+            Stay Connected
+          </h3>
+
+          <div className="mb-5 flex gap-3">
+            <SocialLink href="https://wa.me/919999999999" label="WhatsApp">
               <FaWhatsapp />
-            </a>
-            <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noreferrer" className="text-white/60 hover:text-white transition-colors">
+            </SocialLink>
+            <SocialLink href="https://linkedin.com/in/yourprofile" label="LinkedIn">
               <FaLinkedinIn />
-            </a>
-            <a href="https://instagram.com/yourprofile" target="_blank" rel="noreferrer" className="text-white/60 hover:text-white transition-colors">
+            </SocialLink>
+            <SocialLink href="https://instagram.com/yourprofile" label="Instagram">
               <FaInstagram />
+            </SocialLink>
+          </div>
+
+          <div className="space-y-2 text-sm text-[#d0c8e9]">
+            <a
+              href="mailto:enquiry@thefifthcusp.com"
+              className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-[#c77dff]/10 hover:text-[#c77dff]"
+            >
+              <Mail size={16} />
+              enquiry@thefifthcusp.com
+            </a>
+            <a
+              href="tel:+919876543210"
+              className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-[#c77dff]/10 hover:text-[#c77dff]"
+            >
+              <Phone size={16} />
+              +91 98765 43210
             </a>
           </div>
-          <div className="flex flex-col gap-2 text-sm text-white/60">
-            <a href="mailto:enquiry@thefifthcusp.com" className="flex items-center gap-2 hover:text-white transition-colors">
-              <FaEnvelope /> enquiry@thefifthcusp.com
-            </a>
-            <a href="tel:+919876543210" className="flex items-center gap-2 hover:text-white transition-colors">
-              <FaPhoneAlt /> +91 98765 43210
-            </a>
-          </div>
-        </div>
+        </section>
       </div>
 
-      <div className="border-t border-white/10 px-6 py-4 flex flex-col md:flex-row items-center justify-between text-xs text-white/40">
-        <span>© {currentYear} THE FIFTH CUSP. All rights reserved.</span>
-        <span>DEVELOPED BY INFYLE TECHNOLOGIES</span>
+      <div className="border-t border-white/10 px-6 py-4 text-center text-xs text-[#d0c8e9]">
+        © {currentYear} <span className="text-[#c77dff]">THE FIFTH CUSP</span>.
+        All rights reserved. DEVELOPED BY Neel Shah
       </div>
     </footer>
+  )
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string
+  links: Array<{ label: string; href: string }>
+}) {
+  return (
+    <div className="flex-1">
+      <h3 className="mb-4 border-b border-violet-300/20 pb-2 text-base font-medium">
+        <span className="mr-2 text-[#c77dff]">✦</span>
+        {title}
+      </h3>
+      <ul className="space-y-2">
+        {links.map((link) => (
+          <li key={link.href + link.label}>
+            <Link
+              href={link.href}
+              className="text-sm text-[#d0c8e9] transition hover:translate-x-1 hover:text-white"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function SocialLink({
+  href,
+  label,
+  children,
+}: {
+  href: string
+  label: string
+  children: ReactNode
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
+      className="grid h-10 w-10 place-items-center rounded-lg bg-white/5 text-white transition hover:-translate-y-1 hover:scale-105 hover:bg-[#c77dff] hover:shadow-[0_6px_15px_rgba(199,125,255,0.4)]"
+    >
+      {children}
+    </a>
   )
 }

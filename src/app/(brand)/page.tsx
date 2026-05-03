@@ -1,233 +1,216 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { services } from './constants'
+import { useEffect, useState } from 'react'
+import { ArrowUp } from 'lucide-react'
+import { HOME_API, HOME_CONTENT } from './home.constants'
 import { AboutData, FAQ } from '@/types/home.type'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://astro-5dcy.onrender.com/api'
-
 export default function HomePage() {
-  const [aboutData, setAboutData] = useState<AboutData>({ title: 'About Us', content: '', image: '' })
-  const [faqs, setFaqs] = useState<FAQ[]>([])
+  const [aboutData, setAboutData] = useState<AboutData>(HOME_CONTENT.initialAboutData)
+  const [homeFaqs, setHomeFaqs] = useState<FAQ[]>([])
   const [aboutFaqs, setAboutFaqs] = useState<FAQ[]>([])
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [openAboutFaq, setOpenAboutFaq] = useState<number | null>(null)
-  const [expanded, setExpanded] = useState(false)
+  const [openFaq, setOpenFaq] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const [aboutRes, homeFaqRes, aboutFaqRes] = await Promise.all([
+          axios.get(`${HOME_API.baseUrl}${HOME_API.endpoints.about}`),
+          axios.get(`${HOME_API.baseUrl}${HOME_API.endpoints.homeFaqs}`),
+          axios.get(`${HOME_API.baseUrl}${HOME_API.endpoints.aboutFaqs}`),
+        ])
+
+        if (aboutRes.data) setAboutData(aboutRes.data)
+
+        setHomeFaqs((homeFaqRes.data?.faqs || []).filter((faq: FAQ) => faq.status === 'active'))
+        setAboutFaqs((aboutFaqRes.data?.faqs || []).filter((faq: FAQ) => faq.status === 'active'))
+      } catch {
+        setHomeFaqs([])
+        setAboutFaqs([])
+      }
+    }
+
+    fetchContent()
+  }, [])
+
+  useEffect(() => {
+    if (window.location.hash === `#${HOME_CONTENT.ids.languages}`) {
+      document.getElementById(HOME_CONTENT.ids.languages)?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [])
+
+  const faqs = [...homeFaqs, ...aboutFaqs]
 
   return (
-    <div className="min-h-screen text-white">
-      {/* INTRO */}
-      <section className="max-w-6xl mx-auto px-6 pt-12 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-10 items-center text-center">
-          <div className="flex justify-center">
+    <div className="relative min-h-screen overflow-x-hidden text-white">
+      <div className="relative z-[2] flex min-h-screen flex-col pt-20">
+        <section className="cosmic-glass rounded-[20px] mx-auto grid max-w-6xl gap-8 px-5 pb-12 pt-16 text-center lg:grid-cols-[0.8fr_1.6fr] lg:items-center lg:text-left transition duration-300 hover:-translate-y-2 hover:bg-white/[0.08] hover:shadow-[0_15px_40px_rgba(138,43,226,0.25)]">
+          <div className="mx-auto flex justify-center">
             <Image
-              src="/assets/The Fifth Cusp_Logo.png"
-              alt="The Fifth Cusp Logo"
-              width={220}
-              height={220}
-              className="rounded-full"
+              src={HOME_CONTENT.hero.logo.src}
+              alt={HOME_CONTENT.hero.logo.alt}
+              width={HOME_CONTENT.hero.logo.width}
+              height={HOME_CONTENT.hero.logo.height}
+              priority
+              className="aspect-square w-44 rounded-full object-cover shadow-[0_0_35px_rgba(183,132,247,0.35)] sm:w-56 lg:w-64"
             />
           </div>
-          <div className="text-left space-y-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-widest">THE FIFTH CUSP</h2>
-            <p className="text-gray-300 leading-relaxed">
-              You&apos;re standing inside a new kind of spiritual ecosystem, one built to decode who you are,
-              align where you&apos;re going, and transform how you live.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              Our collective brings together Astrology, Vastu, Energy Reading, Manifestation, Tarot, and
-              Wealth Architecture (Material) into one integrated space.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              Every tool, report, assessment, and consultation is designed to reveal your inner blueprint
-              and translate it into real-world action.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              Whether you want clarity, healing, direction, or growth, the system guides you through your
-              inherent nature, emotional patterns, environment, and the opportunities written into your chart.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              This isn&apos;t a website — it&apos;s a personal operating system for alignment, abundance, and self-mastery.
-              <br />
-              It is a portal to higher frequencies. It is the Cusp.
-            </p>
-          </div>
-        </div>
-      </section>
 
-      {/* LANGUAGES / SERVICES */}
-      <section id="languages" className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold tracking-widest text-center mb-3">LANGUAGES</h2>
-        <p className="text-center text-gray-400 mb-10">Explore cosmic wisdom through our transformative offerings</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, idx) => (
-            <Link
-              key={idx}
-              href={service.link}
-              className="rounded-2xl p-6 text-white no-underline hover:scale-105 transition-transform duration-300"
-              style={{ background: service.gradient }}
-            >
-              <h3 className="text-xl font-bold mb-3 tracking-wider">{service.name}</h3>
-              <p className="text-sm leading-relaxed whitespace-pre-line opacity-90">{service.desc}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ABOUT US */}
-      <section id="about-section" className="max-w-4xl mx-auto px-6 py-16">
-        <motion.div
-          className="text-center mb-10"
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-3xl font-bold tracking-widest">ABOUT US</h2>
-          <p className="text-gray-400 mt-2">Connecting You with Universal Wisdom</p>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-        >
-          <div
-            className="prose prose-invert max-w-none text-gray-300 leading-relaxed transition-all duration-500 overflow-hidden"
-            style={{ maxHeight: expanded ? 'none' : '34rem' }}
-            dangerouslySetInnerHTML={{ __html: aboutData.content || 'Loading…' }}
-          />
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="mt-4 text-purple-400 hover:text-purple-300 underline text-sm"
-          >
-            {expanded ? 'Show Less' : 'Read More'}
-          </button>
-        </motion.div>
-      </section>
-
-      {/* ABOUT YOU */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="flex justify-center">
-            <div className="rounded-2xl overflow-hidden border border-white/10 backdrop-blur-sm p-2">
-              <Image
-                src="/assets/About You_Final.png"
-                alt="About You"
-                width={420}
-                height={420}
-                className="rounded-xl object-cover"
-              />
+          <div>
+            <h1 className="mb-5 text-4xl font-bold tracking-wide text-white sm:text-5xl">
+              {HOME_CONTENT.hero.title}
+            </h1>
+            <div className="space-y-4 text-sm leading-7 text-[#d7d2ef] sm:text-base">
+              {HOME_CONTENT.hero.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
             </div>
           </div>
+        </section>
+
+        <section id={HOME_CONTENT.ids.languages} className="mx-auto max-w-6xl px-5 py-12">
+          <div className="mb-8 text-center">
+            <h2 className="mb-3 text-3xl font-bold tracking-wide text-white sm:text-4xl">
+              {HOME_CONTENT.languages.title}
+            </h2>
+            <p className="text-[#b8b8d4]">{HOME_CONTENT.languages.subtitle}</p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {HOME_CONTENT.languages.services.map((service) => (
+              <Link
+                key={service.link}
+                href={service.link}
+                className="cosmic-glass group flex min-h-[260px] flex-col rounded-[20px] p-6 transition duration-300 hover:-translate-y-2 hover:bg-white/[0.08] hover:shadow-[0_15px_40px_rgba(138,43,226,0.25)]"
+              >
+                <h3 className="mb-4 text-xl font-semibold uppercase tracking-wide text-white">
+                  {service.name}
+                </h3>
+                <p className="flex-1 whitespace-pre-line text-sm leading-6 text-[#c4c4d8]">
+                  {service.desc}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto grid max-w-6xl gap-8 px-5 py-14 lg:grid-cols-[0.85fr_1.4fr] lg:items-center">
+          <div className="cosmic-glass flex justify-center rounded-[20px] p-6">
+            <Image
+              src={HOME_CONTENT.aboutYou.image.src}
+              alt={HOME_CONTENT.aboutYou.image.alt}
+              width={HOME_CONTENT.aboutYou.image.width}
+              height={HOME_CONTENT.aboutYou.image.height}
+              className="w-full max-w-sm object-contain"
+            />
+          </div>
+          <div className="text-center lg:text-left">
+            <h2 className="mb-5 text-3xl font-bold tracking-wide text-white sm:text-4xl">
+              {HOME_CONTENT.aboutYou.title}
+            </h2>
+            <div className="space-y-4 text-sm leading-7 text-[#d7d2ef] sm:text-base">
+              {HOME_CONTENT.aboutYou.paragraphs.map((paragraph) => (
+                <p key={paragraph.text}>
+                  {paragraph.prefix && <strong>{paragraph.prefix}</strong>}
+                  {paragraph.text}
+                </p>
+              ))}
+              <p className="font-semibold text-white">{HOME_CONTENT.aboutYou.emphasis}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-5xl px-5 py-14 text-center">
+          <h2 className="mb-4 text-3xl font-bold tracking-wide text-white sm:text-4xl">
+            {HOME_CONTENT.aboutUs.title}
+          </h2>
+          <p className="mb-8 text-[#b8b8d4]">{HOME_CONTENT.aboutUs.subtitle}</p>
+          <div className="cosmic-glass rounded-[20px] p-6 text-left leading-7 text-[#d7d2ef] sm:p-8">
+            {aboutData.content ? (
+              <div dangerouslySetInnerHTML={{ __html: aboutData.content }} />
+            ) : (
+              <p>{HOME_CONTENT.aboutUs.fallback}</p>
+            )}
+          </div>
+        </section>
+
+        <section className="mx-auto grid max-w-6xl gap-8 px-5 py-14 lg:grid-cols-[0.9fr_1.3fr] lg:items-center">
+          <div className="cosmic-glass flex justify-center rounded-[20px] p-6">
+            <Image
+              src={HOME_CONTENT.ikigai.image.src}
+              alt={HOME_CONTENT.ikigai.image.alt}
+              width={HOME_CONTENT.ikigai.image.width}
+              height={HOME_CONTENT.ikigai.image.height}
+              className="w-full max-w-sm object-contain"
+            />
+          </div>
+          <div className="text-center lg:text-left">
+            <h2 className="mb-4 text-3xl font-bold tracking-wide text-white sm:text-4xl">
+              {HOME_CONTENT.ikigai.title}
+            </h2>
+            <p className="mb-8 text-sm font-semibold uppercase leading-7 tracking-wide text-[#d7d2ef] sm:text-base">
+              {HOME_CONTENT.ikigai.subtitle}
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 lg:justify-start">
+              {HOME_CONTENT.ikigai.actions.map((action) => (
+                <Link key={action.href} href={action.href} className="home-action-btn">
+                  {action.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-4xl px-5 py-14">
+          <div className="mb-8 text-center">
+            <h2 className="mb-3 text-3xl font-bold tracking-wide text-white sm:text-4xl">
+              {HOME_CONTENT.faqs.title}
+            </h2>
+            <p className="text-[#b8b8d4]">{HOME_CONTENT.faqs.subtitle}</p>
+          </div>
+
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold tracking-widest">ABOUT YOU</h2>
-            <p className="text-gray-300 leading-relaxed">
-              <strong>About You</strong> is where you finally understand why you feel the way you do.
-              It reveals your true nature, your wounds, your karmic stories, and the blocks that silently steal your peace.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              When you learn all that you can be at your elevated levels of frequency (what you&apos;re actually meant to be),
-              that&apos;s when you&apos;re ready to realign and propel yourself into the best version of yourself.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              The change truly begins at home — within. This section explains everything, and suddenly, everything begins to make sense.
-            </p>
-            <p className="text-gray-300 leading-relaxed">
-              This is the first real step toward manifestation, inner peace, and becoming who you were always meant to be.
-            </p>
-            <p className="text-purple-300 italic font-medium">
-              Your higher self already exists within you — all you need is to resonate.
-              To let go of the anchors is to finally jump.
-            </p>
+            {faqs.length === 0 ? (
+              <p className="text-center text-white/70">{HOME_CONTENT.faqs.emptyText}</p>
+            ) : (
+              faqs.map((faq) => {
+                const isOpen = openFaq === faq._id
+                return (
+                  <div key={faq._id} className="cosmic-glass rounded-2xl">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(isOpen ? null : faq._id)}
+                      className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                    >
+                      <span className="font-semibold text-white">{faq.question}</span>
+                      <span className="text-2xl text-[#c77dff]">
+                        {isOpen ? HOME_CONTENT.faqs.openSymbol : HOME_CONTENT.faqs.closedSymbol}
+                      </span>
+                    </button>
+                    {isOpen && (
+                      <div className="border-t border-white/10 px-5 pb-5 pt-1 text-sm leading-6 text-[#d7d2ef]">
+                        {faq.answer}
+                      </div>
+                    )}
+                  </div>
+                )
+              })
+            )}
           </div>
-        </div>
-      </section>
-
-      {/* IKIGAI */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="flex justify-center">
-            <Image
-              src="/assets/Ikigai_Final.png"
-              alt="Find Your Ikigai"
-              width={420}
-              height={420}
-              className="rounded-2xl object-cover"
-            />
-          </div>
-          <div className="space-y-6 text-center md:text-left">
-            <h2 className="text-3xl font-bold tracking-widest">IKIGAI — EFFORTLESS GROWTH</h2>
-            <p className="text-gray-400 uppercase tracking-widest text-sm">
-              What you love · What you&apos;re good at · What you can be paid for · What the world needs
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <Link href="/know-more" className="px-6 py-3 bg-purple-700 hover:bg-purple-600 text-white rounded-full font-semibold tracking-wide transition-colors">
-                KNOW MORE
-              </Link>
-              <Link href="/experiences" className="px-6 py-3 border border-purple-500 hover:bg-purple-900/40 text-purple-300 rounded-full font-semibold tracking-wide transition-colors">
-                EXPERIENCE
-              </Link>
-              <Link href="/contact" className="px-6 py-3 border border-white/20 hover:bg-white/10 text-gray-300 rounded-full font-semibold tracking-wide transition-colors">
-                AFFIRM
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQs */}
-      <section className="max-w-3xl mx-auto px-6 py-16">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold tracking-widest">FAQs</h2>
-          <p className="text-gray-400 mt-2">Everything you need to know about us</p>
-        </div>
-        <div className="space-y-3">
-          {[...faqs, ...aboutFaqs].length === 0 && (
-            <p className="text-center text-gray-500">No FAQs available</p>
-          )}
-          {faqs.map((faq, i) => (
-            <div key={faq._id} className="border border-white/10 rounded-xl overflow-hidden">
-              <button
-                className="w-full flex justify-between items-center px-6 py-4 text-left hover:bg-white/5 transition-colors"
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-              >
-                <span className="font-medium">{faq.question}</span>
-                <span className="text-xl text-purple-400">{openFaq === i ? '−' : '+'}</span>
-              </button>
-              {openFaq === i && (
-                <div className="px-6 pb-4 text-gray-400">{faq.answer}</div>
-              )}
-            </div>
-          ))}
-          {aboutFaqs.map((faq, i) => (
-            <div key={faq._id} className="border border-white/10 rounded-xl overflow-hidden">
-              <button
-                className="w-full flex justify-between items-center px-6 py-4 text-left hover:bg-white/5 transition-colors"
-                onClick={() => setOpenAboutFaq(openAboutFaq === i ? null : i)}
-              >
-                <span className="font-medium">{faq.question}</span>
-                <span className="text-xl text-purple-400">{openAboutFaq === i ? '−' : '+'}</span>
-              </button>
-              {openAboutFaq === i && (
-                <div className="px-6 pb-4 text-gray-400">{faq.answer}</div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FIXED CTA */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="px-6 py-3 bg-purple-700 hover:bg-purple-600 text-white rounded-full font-bold tracking-widest shadow-lg transition-colors"
-        >
-          BEGIN MY ALIGNMENT
-        </button>
+        </section>
       </div>
+
+      <button
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-5 right-5 z-20 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white shadow-[0_0_25px_rgba(147,51,234,0.35)] backdrop-blur transition hover:-translate-y-1 hover:bg-white/20"
+        aria-label={HOME_CONTENT.scrollToTop.ariaLabel}
+      >
+        <ArrowUp size={20} />
+      </button>
     </div>
   )
 }

@@ -1,9 +1,11 @@
-import { style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css'
 
 export const root = style({
   fontFamily: "'Poppins', sans-serif",
-  background: `linear-gradient(180deg, #1a0033, #0d001a)`,
+  position: 'relative',
+  zIndex: 2,
   minHeight: '100svh',
+  paddingTop: '72px',
   color: '#fff',
   overflowX: 'hidden',
-});
+})
