@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const primaryLinks = [
@@ -35,20 +35,14 @@ const navItemHover = 'hover:bg-(--color-purple-22) hover:text-white hover:-trans
 
 const activeClass = 'bg-(--color-purple-26) text-white'
 
-const dropdownItemClass =
-  'flex min-h-[30px] py-2 px-3 rounded-lg text-text-faint text-[13px] font-bold tracking-[0.04em] uppercase transition-[background,color] duration-200 hover:bg-(--color-purple-24) hover:text-white'
 
 export default function Navbar() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isServicesOpen, setIsServicesOpen] = useState(false)
 
   useEffect(() => {
     setIsMobileMenuOpen(false)
-    setIsServicesOpen(false)
   }, [pathname])
-
-  const isServicesActive = serviceLinks.some((item) => item.path === pathname)
 
   return (
     <nav className="navbar">
@@ -90,32 +84,15 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {/* Desktop Services dropdown — opens on hover via group */}
-          <div className="relative inline-flex items-center group">
-            <button
-              type="button"
-              className={`${navItemBase} gap-1.5 px-[14px] border-0 bg-transparent cursor-pointer ${navItemHover} ${isServicesActive ? activeClass : ''}`}
+          {serviceLinks.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              className={`${navItemBase} px-[14px] ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
             >
-              Services
-              <ChevronDown
-                size={16}
-                className="transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180"
-              />
-            </button>
-
-            {/* Dropdown menu */}
-            <div className="absolute top-[calc(100%+12px)] right-0 grid w-[230px] gap-1 p-2.5 border border-white/[0.16] rounded-xl bg-(--color-bg-panel) shadow-(--shadow-dropdown) backdrop-blur-[18px] opacity-0 invisible translate-y-2 pointer-events-none transition-[opacity,transform,visibility] duration-200 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:pointer-events-auto">
-              {serviceLinks.map((item) => (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  className={`${dropdownItemClass} ${pathname === item.path ? activeClass : ''}`}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
+              {item.name}
+            </Link>
+          ))}
         </div>
 
         {/* Mobile hamburger */}
@@ -144,34 +121,15 @@ export default function Navbar() {
               </Link>
             ))}
 
-            {/* Services accordion */}
-            <div>
-              <button
-                type="button"
-                onClick={() => setIsServicesOpen((prev) => !prev)}
-                className={`flex w-full items-center justify-between min-h-[40px] px-3 rounded-full text-[13px] font-bold tracking-[0.04em] uppercase transition-[background,color] duration-200 hover:bg-(--color-purple-22) hover:text-white ${isServicesActive ? activeClass : 'text-text-faint'}`}
+            {serviceLinks.map((item) => (
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`${navItemBase} px-3 ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
               >
-                Services
-                <ChevronDown
-                  size={16}
-                  className={`transition-transform duration-200 ${isServicesOpen ? 'rotate-180' : ''}`}
-                />
-              </button>
-
-              {isServicesOpen && (
-                <div className="grid gap-1 pl-3 pt-1">
-                  {serviceLinks.map((item) => (
-                    <Link
-                      key={item.path}
-                      href={item.path}
-                      className={`${dropdownItemClass} ${pathname === item.path ? activeClass : ''}`}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+                {item.name}
+              </Link>
+            ))}
           </div>
         </div>
       )}

@@ -11,7 +11,15 @@ interface AccordionProps {
   items: AccordionItem[]
 }
 
-function AccordionRow({ item, open, onToggle }: { item: AccordionItem; open: boolean; onToggle: () => void }) {
+function AccordionRow({
+  item,
+  open,
+  onToggle,
+}: {
+  item: AccordionItem
+  open: boolean
+  onToggle: () => void
+}) {
   const contentRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -22,7 +30,10 @@ function AccordionRow({ item, open, onToggle }: { item: AccordionItem; open: boo
         aria-expanded={open}
       >
         <span className="text-sm font-semibold text-white sm:text-base">{item.question}</span>
-        <span className="shrink-0 text-xl font-light text-purple-400 transition-transform duration-300" aria-hidden>
+        <span
+          className="shrink-0 text-xl font-light text-purple-400 transition-transform duration-300"
+          aria-hidden
+        >
           {open ? '−' : '+'}
         </span>
       </button>

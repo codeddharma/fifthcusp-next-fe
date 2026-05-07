@@ -1,12 +1,3 @@
-export const HOME_API = {
-  baseUrl: process.env.NEXT_PUBLIC_API_URL || 'https://astro-5dcy.onrender.com/api',
-  endpoints: {
-    about: '/about',
-    homeFaqs: '/faqs/list?page=Home',
-    aboutFaqs: '/faqs/list?page=About us',
-  },
-}
-
 export const HOME_CONTENT = {
   initialAboutData: {
     title: 'About Us',

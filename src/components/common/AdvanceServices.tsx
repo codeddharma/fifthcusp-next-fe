@@ -5,23 +5,31 @@ import { ServiceCard, SkeletonCard } from '@/components/Home/ServiceCard'
 import { fetchServices } from '@/lib/api/services.api'
 import { HOME_CONTENT } from '@/app/(brand)/home.constants'
 
-export default function AdvanceServiceSection() {
+interface AdvanceServiceSectionProps {
+  page: string
+  title: string
+  subtitle?: string
+}
+
+export default function AdvanceServiceSection({
+  page,
+  title,
+  subtitle,
+}: AdvanceServiceSectionProps) {
   const {
     data: services,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['services', 'advanced'],
-    queryFn: () => fetchServices('advanced'),
+    queryKey: ['services', 'advanced', page],
+    queryFn: () => fetchServices('advanced', page),
   })
 
   return (
     <section id="advanced-services" className="mx-auto max-w-6xl px-5 py-12">
       <div className="mb-10 text-center">
-        <h2 className="mb-3 text-3xl font-bold tracking-wide text-white sm:text-4xl">
-          {HOME_CONTENT.advancedServices.title}
-        </h2>
-        <p className="text-[#b8b8d4]">{HOME_CONTENT.advancedServices.subtitle}</p>
+        <h2 className="mb-3 text-3xl font-bold tracking-wide text-white sm:text-4xl">{title}</h2>
+        {subtitle && <p className="text-[#b8b8d4]">{subtitle}</p>}
       </div>
 
       {isError && (

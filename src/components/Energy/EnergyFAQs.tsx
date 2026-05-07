@@ -3,13 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 import Accordion from '@/components/common/Accordion'
 import { fetchFaqs } from '@/lib/api/faqs.api'
-import { HOME_CONTENT } from '@/app/(brand)/home.constants'
-
-interface FAQSectionProps {
-  page: string
-  title?: string
-  subtitle?: string
-}
+import { ENERGY_CONTENT } from '@/app/(brand)/energy/energy.constants'
 
 function SkeletonRow() {
   return (
@@ -19,18 +13,16 @@ function SkeletonRow() {
   )
 }
 
-export default function FAQSection({
-  page,
-  title = HOME_CONTENT.faqs.title,
-  subtitle = HOME_CONTENT.faqs.subtitle,
-}: FAQSectionProps) {
+export default function EnergyFAQs() {
+  const { title, subtitle, emptyText } = ENERGY_CONTENT.faqs
+
   const {
     data: faqs,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['faqs', page],
-    queryFn: () => fetchFaqs(page),
+    queryKey: ['faqs', 'energy'],
+    queryFn: () => fetchFaqs('energy'),
   })
 
   return (
@@ -55,7 +47,7 @@ export default function FAQSection({
       )}
 
       {!isLoading && faqs && faqs.length === 0 && (
-        <p className="text-center text-sm text-white/40">{HOME_CONTENT.faqs.emptyText}</p>
+        <p className="text-center text-sm text-white/40">{emptyText}</p>
       )}
 
       {!isLoading && faqs && faqs.length > 0 && <Accordion items={faqs} />}
