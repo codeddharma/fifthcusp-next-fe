@@ -1,36 +1,27 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import { ServiceCard, SkeletonCard } from '@/components/Home/ServiceCard'
 import { fetchServices } from '@/lib/api/services.api'
+import { useQuery } from '@tanstack/react-query'
+import { ServiceCard, SkeletonCard } from '../Home/ServiceCard'
+import { ASTROLOGY_CONTENT } from '@/app/(brand)/astrology/astrology.constants'
 
-interface BasicServiceSectionProps {
-  page: string
-  title: string
-  type: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology'
-  subtitle?: string
-}
-
-export default function BasicServiceSection({
-  page,
-  title,
-  subtitle,
-  type = 'basic',
-}: BasicServiceSectionProps) {
+export default function ConsultationSection() {
   const {
     data: services,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['services', type, page],
-    queryFn: () => fetchServices(type, page),
+    queryKey: ['services', 'consultation', 'astrology'],
+    queryFn: () => fetchServices('consultation', 'astrology'),
   })
 
   return (
     <section id="services" className="mx-auto max-w-6xl px-5 py-12">
       <div className="mb-10 text-center">
-        <h2 className="mb-3 text-3xl font-bold tracking-wide text-white sm:text-4xl">{title}</h2>
-        {subtitle && <p className="text-[#b8b8d4]">{subtitle}</p>}
+        <h2 className="mb-3 text-3xl font-bold tracking-wide text-white sm:text-4xl">
+          {ASTROLOGY_CONTENT.consultation.title}
+        </h2>
+        <p className="text-[#b8b8d4]">{ASTROLOGY_CONTENT.consultation.subtitle}</p>
       </div>
 
       {isError && (

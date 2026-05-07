@@ -8,17 +8,13 @@ import { useEffect, useState } from 'react'
 
 const primaryLinks = [
   { name: 'Home', path: '/' },
-  { name: 'Careers', path: '/careers' },
-  { name: 'Blogs', path: '/blogs' },
-]
-
-const serviceLinks = [
   { name: 'Energy', path: '/energy' },
   { name: 'Astrology', path: '/astrology' },
   { name: 'Vastu', path: '/vastu' },
   { name: 'Manifestation', path: '/manifestation' },
   { name: 'Material', path: '/wealth-architecture' },
   { name: 'Tarot Reading', path: '/tarot-reading' },
+  { name: 'Blogs', path: '/blogs' },
 ]
 
 const logo = {
@@ -34,7 +30,6 @@ const navItemBase =
 const navItemHover = 'hover:bg-(--color-purple-22) hover:text-white hover:-translate-y-px'
 
 const activeClass = 'bg-(--color-purple-26) text-white'
-
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -83,16 +78,6 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
-
-          {serviceLinks.map((item) => (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`${navItemBase} px-[14px] ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
-            >
-              {item.name}
-            </Link>
-          ))}
         </div>
 
         {/* Mobile hamburger */}
@@ -112,16 +97,6 @@ export default function Navbar() {
         <div className="nav:hidden absolute top-[72px] left-0 right-0 grid gap-[14px] px-4 py-[14px] pb-[18px] border-b border-white/[0.12] bg-(--color-bg-panel-solid) shadow-(--shadow-mobile-panel) backdrop-blur-[18px]">
           <div className="grid gap-1">
             {primaryLinks.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`${navItemBase} px-3 ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
-              >
-                {item.name}
-              </Link>
-            ))}
-
-            {serviceLinks.map((item) => (
               <Link
                 key={item.path}
                 href={item.path}

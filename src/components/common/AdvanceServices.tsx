@@ -8,6 +8,7 @@ import { HOME_CONTENT } from '@/app/(brand)/home.constants'
 interface AdvanceServiceSectionProps {
   page: string
   title: string
+  type: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology'
   subtitle?: string
 }
 
@@ -15,14 +16,15 @@ export default function AdvanceServiceSection({
   page,
   title,
   subtitle,
+  type = 'advanced',
 }: AdvanceServiceSectionProps) {
   const {
     data: services,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['services', 'advanced', page],
-    queryFn: () => fetchServices('advanced', page),
+    queryKey: ['services', type, page],
+    queryFn: () => fetchServices(type, page),
   })
 
   return (

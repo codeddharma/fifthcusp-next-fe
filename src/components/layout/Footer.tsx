@@ -25,8 +25,8 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-violet-300/10 bg-gradient-to-b from-bg-overlay to-[#1a1038] pt-10 text-white">
-      <div className="mx-auto flex max-w-[calc(100svw-200px)] flex-wrap justify-between gap-8 px-6 pb-8">
-        <section className="min-w-[250px] flex-1">
+      <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-8 px-4 pb-8 sm:px-6">
+        <section className="w-full flex-1 sm:min-w-[250px]">
           <div className="mb-5 flex items-start gap-4">
             <Image
               src="/assets/logo.png"
@@ -51,12 +51,12 @@ export default function Footer() {
           </p>
         </section>
 
-        <section className="flex min-w-[250px] flex-1 gap-8 pt-2">
+        <section className="flex w-full flex-1 gap-8 pt-2 sm:min-w-[250px]">
           <FooterColumn title="Pages" links={pageLinks} />
           <FooterColumn title="Services" links={serviceLinks} />
         </section>
 
-        <section className="min-w-[250px] flex-1 pt-2">
+        <section className="w-full flex-1 pt-2 sm:min-w-[250px]">
           <h3 className="mb-4 border-b border-violet-300/20 pb-2 text-base font-medium">
             <span className="mr-2 text-brand-purple">✦</span>
             Stay Connected
@@ -93,7 +93,7 @@ export default function Footer() {
         </section>
       </div>
 
-      <div className="border-t border-white/10 px-6 py-4 text-center text-xs text-text-pearl">
+      <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-text-pearl sm:px-6">
         © {currentYear} <span className="text-brand-purple">THE FIFTH CUSP</span>. All rights
         reserved. DEVELOPED BY Neel Shah
       </div>
