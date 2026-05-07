@@ -1,8 +1,4 @@
-import axios from 'axios'
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/payments`
-  : 'https://astro-5dcy.onrender.com/api/payments'
+import api from './axiosInstance'
 
 interface CreateOrderParams {
   amount: number
@@ -20,20 +16,18 @@ interface PaymentData {
 
 export async function createOrder({ amount, userId, planId }: CreateOrderParams) {
   try {
-    const res = await axios.post(`${API_URL}/create-order`, { amount, userId, planId })
+    const res = await api.post('/payments/create-order', { amount, userId, planId })
     return res.data
-  } catch (err: any) {
-    console.error('❌ Create Order Error:', err.response?.data || err.message)
+  } catch {
     return null
   }
 }
 
 export async function verifyPayment(paymentData: PaymentData) {
   try {
-    const res = await axios.post(`${API_URL}/verify`, paymentData)
+    const res = await api.post('/payments/verify', paymentData)
     return res.data
-  } catch (err: any) {
-    console.error('❌ Verify Error:', err.response?.data || err.message)
+  } catch {
     return null
   }
 }

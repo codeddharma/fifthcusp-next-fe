@@ -15,8 +15,7 @@ export default function CTAButton({
   variant = 'primary',
   className = '',
 }: CTAButtonProps) {
-  const base =
-    'inline-block px-6 py-3 text-sm font-semibold tracking-widest transition-colors'
+  const base = 'inline-block px-6 py-3 text-sm font-semibold tracking-widest transition-colors'
   const styles =
     variant === 'primary'
       ? 'bg-white text-black hover:bg-white/90'

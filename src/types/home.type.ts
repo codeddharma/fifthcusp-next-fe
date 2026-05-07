@@ -1,8 +1,13 @@
 export interface FAQ {
-  _id: string
   question: string
   answer: string
-  status: string
+  isActive: boolean
+}
+
+export interface FAQsResponse {
+  success: boolean
+  message: string
+  data: FAQ[]
 }
 
 export interface AboutData {

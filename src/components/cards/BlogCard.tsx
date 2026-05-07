@@ -42,7 +42,10 @@ export default function BlogCard({
           <span>{date}</span>
         </div>
         <button
-          onClick={(e) => { e.stopPropagation(); onClick?.() }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onClick?.()
+          }}
           className="mt-2 self-start px-4 py-2 text-xs tracking-widest border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
         >
           {ctaText}

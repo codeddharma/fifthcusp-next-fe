@@ -20,7 +20,10 @@ export const loadRazorpayScript = (): Promise<boolean> => {
     script.src = 'https://checkout.razorpay.com/v1/checkout.js'
     script.async = true
     script.onload = () => resolve(true)
-    script.onerror = () => { console.error('Failed to load Razorpay script'); resolve(false) }
+    script.onerror = () => {
+      console.error('Failed to load Razorpay script')
+      resolve(false)
+    }
     document.body.appendChild(script)
   })
 }
@@ -77,10 +80,16 @@ export const initiateRazorpayPayment = async ({
 }: PaymentOptions): Promise<boolean> => {
   try {
     const scriptLoaded = await loadRazorpayScript()
-    if (!scriptLoaded) { onError?.('Payment system loading failed.'); return false }
+    if (!scriptLoaded) {
+      onError?.('Payment system loading failed.')
+      return false
+    }
 
     const orderResult = await createRazorpayOrder(amount, userId)
-    if (!orderResult.success) { onError?.(orderResult.error || 'Failed to create order'); return false }
+    if (!orderResult.success) {
+      onError?.(orderResult.error || 'Failed to create order')
+      return false
+    }
 
     const { order, key } = orderResult as any
 
@@ -123,7 +132,12 @@ export const initiateRazorpayPayment = async ({
 export const simulatePayment = (delay = 1500): Promise<Record<string, unknown>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ success: true, simulated: true, paymentId: `sim_${Date.now()}`, orderId: `order_sim_${Date.now()}` })
+      resolve({
+        success: true,
+        simulated: true,
+        paymentId: `sim_${Date.now()}`,
+        orderId: `order_sim_${Date.now()}`,
+      })
     }, delay)
   })
 }

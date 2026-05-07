@@ -1,3 +1,0 @@
-export default function EnergyReadingPage() {
-  return <main className="min-h-screen p-8"><h1 className="text-3xl font-bold">EnergyReading</h1></main>
-}
