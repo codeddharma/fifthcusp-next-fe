@@ -20,7 +20,7 @@ function VerticalSteps({ steps, accentColor }: { steps: Step[]; accentColor: str
     <div className="flex flex-col gap-0">
       {steps.map((s, i) => (
         <motion.div
-          key={s.step}
+          key={`step-${s.step}`}
           className="flex gap-5"
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -58,7 +58,7 @@ function HorizontalSteps({ steps, accentColor }: { steps: Step[]; accentColor: s
   return (
     <div className="flex flex-wrap gap-y-8">
       {steps.map((s, i) => (
-        <div key={s.step} className="flex w-full flex-col sm:w-1/4">
+        <div key={`step-${s.step}`} className="flex w-full flex-col sm:w-1/4">
           {/* Circle + connector */}
           <div className="mb-4 flex items-center">
             <motion.div
@@ -103,7 +103,7 @@ function CardsSteps({ steps, accentColor }: { steps: Step[]; accentColor: string
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
       {steps.map((s, i) => (
         <motion.div
-          key={s.step}
+          key={`step-${s.step}`}
           className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

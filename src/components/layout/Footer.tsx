@@ -6,17 +6,16 @@ import { FaInstagram, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa'
 
 const pageLinks = [
   { label: 'Home', href: '/' },
-  { label: 'Languages', href: '/careers' },
-  { label: 'Well Beings', href: '/manifestation' },
-  { label: 'Manifestation Calendar', href: '/manifestation' },
+  { label: 'Careers', href: '/careers' },
   { label: 'Blogs', href: '/blogs' },
 ]
 
 const serviceLinks = [
   { label: 'Energy', href: '/energy' },
+  {label:"Astrology", href: '/astrology'},
   { label: 'Manifestation', href: '/manifestation' },
   { label: 'Vastu', href: '/vastu' },
-  { label: 'Material', href: '/wealth-architecture' },
+  { label: 'Material', href: '/material' },
   { label: 'Tarot Reading', href: '/tarot-reading' },
 ]
 

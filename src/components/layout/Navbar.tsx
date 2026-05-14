@@ -14,6 +14,7 @@ const primaryLinks = [
   { name: 'Manifestation', path: '/manifestation' },
   { name: 'Material', path: '/material' },
   { name: 'Tarot Reading', path: '/tarot-reading' },
+  { name: 'Careers', path: '/careers' },
   { name: 'Blogs', path: '/blogs' },
 ]
 
