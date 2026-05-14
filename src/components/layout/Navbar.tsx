@@ -12,7 +12,7 @@ const primaryLinks = [
   { name: 'Astrology', path: '/astrology' },
   { name: 'Vastu', path: '/vastu' },
   { name: 'Manifestation', path: '/manifestation' },
-  { name: 'Material', path: '/wealth-architecture' },
+  { name: 'Material', path: '/material' },
   { name: 'Tarot Reading', path: '/tarot-reading' },
   { name: 'Blogs', path: '/blogs' },
 ]

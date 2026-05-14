@@ -1,0 +1,119 @@
+export const MATERIAL_CONTENT = {
+  hero: {
+    image: {
+      src: 'https://i.etsystatic.com/50315636/r/il/4448f3/6099304610/il_1080xN.6099304610_8ps8.jpg',
+      alt: 'Material Astrology',
+      width: 360,
+      height: 360,
+    },
+    title: 'MATERIAL',
+    description:
+      'Material is the architecture of wealth creation through energy, intention, environment, and aligned action. It is where your inner frequency meets real world strategy. Wealth is not an accident. It is a vibration you cultivate, a system you build, and a reality you consciously hold. In this space, we bring together Astrology, Energy Reading, Vastu, Numerology, Wealth Psychology, and complete calibration to help you create a life that feels abundant, secure, and expansive.',
+  },
+  howItWorks: {
+    title: 'HOW IT WORKS',
+    paragraphs: [
+      'Your material reality is a reflection of your energetic capacity. To build wealth, you first strengthen the inner field. Then you align your environment, your timing, your mindset, and your strategic decisions.',
+      'We begin by assessing your wealth frequency through your chart, your Vastu blueprint, your money patterns, and your energetic field.',
+      'From there, we design a pathway that includes wealth rituals, vastu corrections, energetic upgrades, manifestation alignment, and practical financial strategy.',
+      'The result is wealth architecture that is energetically strong, astrologically aligned, and materially actionable.',
+    ],
+    highlight:
+      'We help you make better decisions. We help you find out the RoI of those decisions. We take part in your entrepreneurial journey with you to help you achieve abundance.',
+  },
+  steps: [
+    {
+      step: 0,
+      title: 'Wealth Diagnosis & Pattern Mapping',
+      description: 'Decode your money psychology and karmic patterns.',
+    },
+    {
+      step: 1,
+      title: 'Desire Calibration & Value Alignment',
+      description: 'Align what you attract with what you truly value.',
+    },
+    {
+      step: 2,
+      title: 'Expansion of Wealth Beliefs & Opportunity Intelligence',
+      description: 'Expand vision, timing, and capacity for growth.',
+    },
+    {
+      step: 3,
+      title: 'Strategic Action & Wealth Execution',
+      description: 'Convert strategy into decisive movement.',
+    },
+    {
+      step: 4,
+      title: 'Consistency, Structure & Long-Term Wealth Architecture',
+      description: 'Build systems that compound beyond effort.',
+    },
+    {
+      step: 5,
+      title: 'Intelligent Flow, Timing & Wealth Networking',
+      description: 'Master deal flow, timing, and high-capital circles.',
+    },
+    {
+      step: 6,
+      title: 'Authority, Legacy & Wealth Leadership',
+      description: 'Command wealth and shape industries.',
+    },
+  ],
+  tailoredProposal: {
+    title: 'REQUEST A TAILORED PROPOSAL',
+    paragraphs: [
+      'Every individual carries a unique wealth signature. It is the coded blueprint that shapes how abundance enters your life, how you earn, which opportunities open for you, and what material potential you are capable of realising.',
+      'This signature is influenced by the industries aligned with your temperament, the nature of trade that resonates with your psychology, your energetic and Vastu design, your karmic pathways, your leadership imprint, and the unseen support systems that strengthen or weaken your material world.',
+      'Share your details and our team will create a personalized proposal outlining how we can elevate your business or personal wealth journey. You will receive a clear, structured plan from scratch to execution.',
+      'The process is completely personalized based on your chart, numbers, environment, and energetic imprint to identify your earning style, opportunities, risks, leadership pattern, and material potential.',
+      'We detect misaligned zones, weak planetary periods, energy drains, numerical conflicts, subconscious blocks, and structural imbalances. After careful curation and discussions, you receive a 30, 90, and 180-day action map for sustained growth.',
+    ],
+    whoIsItFor: {
+      title: 'WHO THIS IS FOR',
+      items: [
+        'Individuals earning well but feeling stuck at a plateau.',
+        'Professionals seeking clarity on the right industry or role.',
+        'Entrepreneurs wanting alignment of energy, space, and timing.',
+        'Creators, freelancers, and consultants seeking consistency.',
+        'Business owners facing stagnation or unexplained setbacks.',
+        'People with strong ideas but no clear execution pathway.',
+        'Individuals feeling blocked despite discipline and effort.',
+        'Anyone wanting wealth aligned with their cosmic design.',
+      ],
+    },
+    finalHighlight:
+      'This is not for quick fixes or generic advice. This is for those who want a precision-engineered wealth plan aligned across chart, space, numbers, mind, and energy.',
+  },
+  services: {
+    title: 'SERVICES',
+    items: [
+      {
+        key: 'individual-wealth',
+        tag: 'Premium',
+        title: 'Individual Wealth Programme',
+        description:
+          'Identify inborn wealth signatures, reprogram wealth beliefs, optimize behavior, environment, and energy, karmic clearing, ongoing optimization.',
+        price: 4999,
+      },
+      {
+        key: 'business-consulting',
+        tag: 'Consultation',
+        title: 'Business Consulting',
+        description:
+          'Tailored business strategy call with chart-based insights, decode blocks, pricing, branding, investor compatibility, execution plan.',
+        price: 2999,
+      },
+      {
+        key: 'abundance-programme',
+        tag: 'Program',
+        title: 'Abundance Programme',
+        description:
+          'Specific plans based on chart to maximize wealth. Guidance on finances, investments, and wealth creation strategies.',
+        price: 3999,
+      },
+    ],
+  },
+  faqs: {
+    title: 'FAQs',
+    subtitle: 'Everything you need to know about Material',
+  },
+}
