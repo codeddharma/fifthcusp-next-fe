@@ -1,55 +1,65 @@
 'use client'
 
 import Image from 'next/image'
+import { Clock } from 'lucide-react'
+import type { BlogSummary } from '@/types/blog.type'
 
 interface BlogCardProps {
-  title: string
-  description: string
-  image: string
-  date: string
-  author: string
-  ctaText?: string
-  onClick?: () => void
+  blog: BlogSummary
+  onClick: () => void
 }
 
-export default function BlogCard({
-  title,
-  description,
-  image,
-  date,
-  author,
-  ctaText = 'Read More',
-  onClick,
-}: BlogCardProps) {
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+}
+
+export default function BlogCard({ blog, onClick }: BlogCardProps) {
   return (
     <div
       onClick={onClick}
-      className="group cursor-pointer bg-black border border-white/10 hover:border-white/30 transition-colors overflow-hidden"
+      className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-[#a855f7]/40 hover:bg-white/8"
     >
-      <div className="relative h-48 overflow-hidden">
+      {/* Cover image */}
+      <div className="relative h-48 shrink-0 overflow-hidden">
         <Image
-          src={image}
-          alt={title}
+          src={blog.coverImage}
+          alt={blog.title}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-500"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
+        {/* Category pill over image */}
+        <span className="absolute left-3 top-3 rounded-full bg-[#a855f7]/80 px-3 py-0.5 text-xs font-semibold text-white backdrop-blur-sm">
+          {blog.category}
+        </span>
       </div>
-      <div className="p-5 flex flex-col gap-2">
-        <h3 className="text-base font-semibold text-white">{title}</h3>
-        <p className="text-sm text-white/60 leading-relaxed line-clamp-2">{description}</p>
-        <div className="flex items-center justify-between text-xs text-white/40 mt-1">
-          <span>{author}</span>
-          <span>{date}</span>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        <h3 className="text-base font-bold leading-snug text-white line-clamp-2">{blog.title}</h3>
+        <p className="flex-1 text-sm leading-6 text-[#c4b5fd] line-clamp-3">{blog.excerpt}</p>
+
+        {/* Tags */}
+        {blog.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {blog.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 text-xs text-[#c4b5fd]"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Meta footer */}
+        <div className="flex items-center justify-between border-t border-white/10 pt-3 text-xs text-[#c4b5fd]/60">
+          <span>{formatDate(blog.publishedAt)}</span>
+          <span className="flex items-center gap-1">
+            <Clock size={11} />
+            {blog.readTime} min read
+          </span>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            onClick?.()
-          }}
-          className="mt-2 self-start px-4 py-2 text-xs tracking-widest border border-white/30 text-white hover:bg-white hover:text-black transition-colors"
-        >
-          {ctaText}
-        </button>
       </div>
     </div>
   )
