@@ -3,12 +3,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { ServiceCard, SkeletonCard } from '@/components/Home/ServiceCard'
 import { fetchServices } from '@/lib/api/services.api'
-import { HOME_CONTENT } from '@/app/(brand)/home.constants'
 
 interface AdvanceServiceSectionProps {
   page: string
   title: string
-  type: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology'
+  type: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology' | 'practice'
   subtitle?: string
 }
 

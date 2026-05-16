@@ -24,8 +24,8 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-violet-300/10 bg-gradient-to-b from-bg-overlay to-[#1a1038] pt-10 text-white">
-      <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-8 px-4 pb-8 sm:px-6">
-        <section className="w-full flex-1 sm:min-w-[250px]">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 px-4 pb-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
+        <section>
           <div className="mb-5 flex items-start gap-4">
             <Image
               src="/assets/logo.png"
@@ -50,12 +50,12 @@ export default function Footer() {
           </p>
         </section>
 
-        <section className="flex w-full flex-1 gap-8 pt-2 sm:min-w-[250px]">
+        <section className="flex gap-8 pt-2">
           <FooterColumn title="Pages" links={pageLinks} />
           <FooterColumn title="Services" links={serviceLinks} />
         </section>
 
-        <section className="w-full flex-1 pt-2 sm:min-w-[250px]">
+        <section className="pt-2">
           <h3 className="mb-4 border-b border-violet-300/20 pb-2 text-base font-medium">
             <span className="mr-2 text-brand-purple">✦</span>
             Stay Connected
