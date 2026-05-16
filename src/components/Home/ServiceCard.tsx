@@ -1,44 +1,59 @@
+'use client'
+
+import { useState } from 'react'
 import Card from '@/components/common/Card'
 import Button from '@/components/common/Button'
+import BookingModal from '@/components/booking/BookingModal'
 import { discountedPrice } from '@/lib/utils/pricing'
 import type { Service } from '@/types/service.type'
 
 export function ServiceCard({ service }: { service: Service }) {
+  const [modalOpen, setModalOpen] = useState(false)
   const { title, subtitle, description, price, isInSale, saleTitle, discountPercentage } = service
   const finalPrice = isInSale ? discountedPrice(price, discountPercentage) : price
 
   return (
-    <Card hover className="relative flex flex-col gap-4 overflow-hidden p-6">
-      {isInSale && (
-        <div className="absolute right-0 top-0 h-24 w-24 overflow-hidden">
-          <span className="absolute right-[-28px] top-[18px] w-[110px] rotate-45 bg-gradient-to-r from-purple-600 to-fuchsia-500 py-1 text-center text-[10px] font-bold tracking-widest text-white shadow-md shadow-purple-900/50">
-            {saleTitle?.toUpperCase() ?? `${discountPercentage}% OFF`}
-          </span>
-        </div>
-      )}
-
-      <div className="flex flex-col gap-1 pr-16">
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
-        <p className="text-sm text-white/50">{subtitle}</p>
-      </div>
-
-      <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-white/70">{description}</p>
-
-      <div className="flex items-center justify-between gap-4 pt-2">
-        <div className="flex items-baseline gap-2">
-          <span className="text-xl font-bold text-white">
-            ₹{finalPrice.toLocaleString('en-IN')}
-          </span>
-          {isInSale && (
-            <span className="text-sm text-white/40 line-through">
-              ₹{price.toLocaleString('en-IN')}
+    <>
+      <Card hover className="relative flex flex-col gap-4 overflow-hidden p-6">
+        {isInSale && (
+          <div className="absolute right-0 top-0 h-24 w-24 overflow-hidden">
+            <span className="absolute right-[-28px] top-[18px] w-[110px] rotate-45 bg-gradient-to-r from-purple-600 to-fuchsia-500 py-1 text-center text-[10px] font-bold tracking-widest text-white shadow-md shadow-purple-900/50">
+              {saleTitle?.toUpperCase() ?? `${discountPercentage}% OFF`}
             </span>
-          )}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-1 pr-16">
+          <h3 className="text-lg font-semibold text-white">{title}</h3>
+          <p className="text-sm text-white/50">{subtitle}</p>
         </div>
 
-        <Button size="md">Book Now</Button>
-      </div>
-    </Card>
+        <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-white/70">{description}</p>
+
+        <div className="flex items-center justify-between gap-4 pt-2">
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl font-bold text-white">
+              ₹{finalPrice.toLocaleString('en-IN')}
+            </span>
+            {isInSale && (
+              <span className="text-sm text-white/40 line-through">
+                ₹{price.toLocaleString('en-IN')}
+              </span>
+            )}
+          </div>
+
+          <Button size="md" onClick={() => setModalOpen(true)}>
+            Book Now
+          </Button>
+        </div>
+      </Card>
+
+      <BookingModal
+        service={service}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
+    </>
   )
 }
 
