@@ -6,7 +6,6 @@ import AdvanceServiceSection from '@/components/common/AdvanceServices'
 import FAQSection from '@/components/Home/FAQs'
 import { ASTROLOGY_CONTENT } from './astrology.constants'
 import ConsultationSection from '@/components/Astrology/Consultation'
-import ReportsSection from '@/components/Astrology/Reports'
 
 export default function AstrologyPage() {
   return (

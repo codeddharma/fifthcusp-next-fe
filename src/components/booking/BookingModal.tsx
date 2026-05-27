@@ -8,7 +8,13 @@ import Button from '@/components/common/Button'
 import DynamicFormField from '@/components/booking/DynamicFormField'
 import FileUploadField from '@/components/booking/FileUploadField'
 import { discountedPrice } from '@/lib/utils/pricing'
-import { initiateRazorpayPayment } from '@/lib/razorpayHandler'
+import { openRazorpayCheckout } from '@/lib/razorpayHandler'
+import {
+  createOrder,
+  verifyOrderPayment,
+  type CreateOrderResponse,
+} from '@/lib/api/orders.api'
+import { useOrderStatusPolling } from '@/hooks/useOrderStatusPolling'
 import type { Service, FormInput } from '@/types/service.type'
 
 // ---------------------------------------------------------------------------
@@ -132,7 +138,31 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [orderStatus, setOrderStatus] = useState<OrderStatus>(null)
   const [paying, setPaying] = useState(false)
+  const [order, setOrder] = useState<CreateOrderResponse | null>(null)
+  const [pollingEnabled, setPollingEnabled] = useState(false)
   const bodyRef = useRef<HTMLDivElement>(null)
+
+  useOrderStatusPolling({
+    orderNumber: order?.orderNumber ?? null,
+    enabled: pollingEnabled,
+    onPaid: () => {
+      setPollingEnabled(false)
+      setPaying(false)
+      setOrderStatus('success')
+      goTo(3)
+    },
+    onFailed: () => {
+      setPollingEnabled(false)
+      setPaying(false)
+      setOrderStatus('failure')
+      goTo(3)
+    },
+    onTimeout: () => {
+      setPollingEnabled(false)
+      setPaying(false)
+      toast.error('Payment not completed. You can retry below.')
+    },
+  })
 
   const finalPrice = service.isInSale
     ? discountedPrice(service.price, service.discountPercentage)
@@ -168,6 +198,8 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
         setErrors({})
         setOrderStatus(null)
         setPaying(false)
+        setOrder(null)
+        setPollingEnabled(false)
       }, 300)
     }
   }, [open])
@@ -202,54 +234,77 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
     goTo(2)
   }
 
-  const handlePay = async () => {
-    setPaying(true)
-    const userId = (() => {
-      try { return JSON.parse(localStorage.getItem('user') ?? '{}')._id ?? '' }
-      catch { return '' }
-    })()
-
-    await initiateRazorpayPayment({
-      amount: finalPrice,
-      userId,
-      name: [formData.firstName, formData.lastName].filter(Boolean).join(' '),
-      email: formData.email,
-      phone: formData.phone ? `+91${formData.phone}` : undefined,
+  const openCheckout = async (existing: CreateOrderResponse) => {
+    await openRazorpayCheckout({
+      key: existing.key,
+      amount: existing.amount,
+      currency: existing.currency,
+      razorpayOrderId: existing.razorpayOrderId,
+      name: 'THE FIFTH CUSP',
       description: service.title,
-      onSuccess: async (_verifyResult, razorResponse) => {
+      prefill: existing.prefill,
+      onSuccess: async (rp) => {
         try {
-          // Build FormData for file uploads
-          const fd = new FormData()
-          fd.append('serviceId', service._id)
-          fd.append('serviceSku', service.sku)
-          fd.append('formData', JSON.stringify(formData))
-          fd.append('paymentId', razorResponse?.razorpay_payment_id ?? '')
-          fd.append('orderId', razorResponse?.razorpay_order_id ?? '')
-          fd.append('amount', String(finalPrice))
-          fd.append('userId', userId)
-          for (const [key, fileList] of Object.entries(files)) {
-            for (const file of fileList) fd.append(key, file)
+          const res = await verifyOrderPayment(existing.orderNumber, {
+            razorpay_order_id: rp.razorpay_order_id,
+            razorpay_payment_id: rp.razorpay_payment_id,
+            razorpay_signature: rp.razorpay_signature,
+          })
+          setPaying(false)
+          if (res.paymentStatus === 'paid') {
+            setOrderStatus('success')
+            goTo(3)
+          } else {
+            setOrderStatus('failure')
+            goTo(3)
           }
-          // Fire-and-forget booking creation — failure here shouldn't block the success screen
-          const { default: api } = await import('@/lib/api/axiosInstance')
-          await api.post('/v1/bookings', fd).catch(() => null)
         } catch {
-          // Intentional: booking record failure is non-blocking
+          // Verify call failed (network etc.) — webhook may still confirm. Poll briefly.
+          setPollingEnabled(true)
         }
-        setPaying(false)
-        setOrderStatus('success')
-        goTo(3)
+      },
+      onDismiss: () => {
+        // Browser closed Razorpay without paying — webhook may still come through. Poll briefly.
+        setPollingEnabled(true)
       },
       onFailure: () => {
         setPaying(false)
         setOrderStatus('failure')
         goTo(3)
       },
-      onError: (msg) => {
-        setPaying(false)
-        toast.error(msg ?? 'Payment could not be processed.')
-      },
     })
+  }
+
+  const handlePay = async () => {
+    setPaying(true)
+    try {
+      let placed = order
+      if (!placed) {
+        const fullName = [formData.firstName, formData.lastName].filter(Boolean).join(' ').trim()
+        const fd = new FormData()
+        fd.append('serviceSku', service.sku)
+        fd.append(
+          'customer',
+          JSON.stringify({
+            name: fullName || formData.email,
+            email: formData.email,
+            phone: String(formData.phone ?? ''),
+          }),
+        )
+        fd.append('quantity', '1')
+        fd.append('formResponses', JSON.stringify(formData))
+        fd.append('selectedAddOns', JSON.stringify([]))
+        for (const [key, fileList] of Object.entries(files)) {
+          for (const file of fileList) fd.append(key, file)
+        }
+        placed = await createOrder(fd)
+        setOrder(placed)
+      }
+      await openCheckout(placed)
+    } catch {
+      // Axios interceptor already toasted the error
+      setPaying(false)
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -390,7 +445,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                     </div>
 
                     <p className="mt-4 text-xs leading-relaxed text-white/40">
-                      You will be redirected to Razorpay's secure payment gateway. After successful
+                      You will be redirected to Razorpay&apos;s secure payment gateway. After successful
                       payment, your booking will be confirmed.
                     </p>
                   </motion.div>
@@ -419,7 +474,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                         <h2 className="mt-5 text-2xl font-bold text-white">Booking Confirmed!</h2>
                         <p className="mt-2 max-w-xs text-sm text-white/55">
                           Thank you for booking <span className="text-white">{service.title}</span>.
-                          We'll be in touch shortly to coordinate your session.
+                          We&apos;ll be in touch shortly to coordinate your session.
                         </p>
                         <Button className="mt-8 w-full" onClick={onClose}>
                           Close

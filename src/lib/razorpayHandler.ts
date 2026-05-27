@@ -1,10 +1,6 @@
 'use client'
 
-import axios from 'axios'
-
-const PAYMENTS_API = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL}/payments`
-  : 'https://astro-5dcy.onrender.com/api/payments'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 declare global {
   interface Window {
@@ -12,7 +8,27 @@ declare global {
   }
 }
 
-export const loadRazorpayScript = (): Promise<boolean> => {
+export interface RazorpaySuccessResponse {
+  razorpay_order_id: string
+  razorpay_payment_id: string
+  razorpay_signature: string
+}
+
+export interface OpenRazorpayCheckoutOptions {
+  key: string
+  amount: number // in paise
+  currency: string
+  razorpayOrderId: string
+  name?: string
+  description?: string
+  prefill: { name: string; email: string; contact: string }
+  themeColor?: string
+  onSuccess: (response: RazorpaySuccessResponse) => void
+  onDismiss?: () => void
+  onFailure?: (error: unknown) => void
+}
+
+export function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
     if (typeof window === 'undefined') return resolve(false)
     if (window.Razorpay) return resolve(true)
@@ -20,124 +36,57 @@ export const loadRazorpayScript = (): Promise<boolean> => {
     script.src = 'https://checkout.razorpay.com/v1/checkout.js'
     script.async = true
     script.onload = () => resolve(true)
-    script.onerror = () => {
-      console.error('Failed to load Razorpay script')
-      resolve(false)
-    }
+    script.onerror = () => resolve(false)
     document.body.appendChild(script)
   })
 }
 
-export const createRazorpayOrder = async (amount: number, userId: string) => {
-  try {
-    const res = await axios.post(`${PAYMENTS_API}/create-order`, { amount, userId })
-    if (res.data?.success && res.data.order) {
-      return {
-        success: true,
-        order: res.data.order,
-        key: res.data.key || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      }
-    }
-    return { success: false, error: 'Order creation failed' }
-  } catch (err: any) {
-    return { success: false, error: err.message }
+export async function openRazorpayCheckout(options: OpenRazorpayCheckoutOptions): Promise<boolean> {
+  const ok = await loadRazorpayScript()
+  if (!ok) {
+    options.onFailure?.(new Error('Razorpay script failed to load'))
+    return false
   }
+
+  const rzp = new window.Razorpay({
+    key: options.key,
+    amount: options.amount,
+    currency: options.currency,
+    name: options.name ?? 'THE FIFTH CUSP',
+    description: options.description,
+    order_id: options.razorpayOrderId,
+    prefill: options.prefill,
+    theme: { color: options.themeColor ?? '#7b2cbf' },
+    modal: {
+      ondismiss: () => options.onDismiss?.(),
+    },
+    handler: (response: RazorpaySuccessResponse) => options.onSuccess(response),
+  })
+
+  rzp.on('payment.failed', (response: unknown) => {
+    options.onFailure?.(response)
+  })
+
+  rzp.open()
+  return true
 }
 
-export const verifyPayment = async (paymentData: Record<string, unknown>) => {
-  try {
-    const res = await axios.post(`${PAYMENTS_API}/verify`, paymentData)
-    return res.data
-  } catch (err: any) {
-    return { success: false, error: err.message }
-  }
-}
-
-interface PaymentOptions {
+/**
+ * @deprecated Use the orders.api.ts `createOrder` + `openRazorpayCheckout` flow.
+ * Kept only because `ServicePage.tsx` (unreferenced legacy) still imports it.
+ */
+export async function initiateRazorpayPayment(_opts: {
   amount: number
   userId: string
   name?: string
   email?: string
   phone?: string
   description?: string
-  onSuccess?: (verifyResult: any, razorResponse: any) => void
-  onFailure?: (result: any, razorResponse: any) => void
+  onSuccess?: (verifyResult: unknown, razorResponse: unknown) => void
+  onFailure?: (result: unknown, razorResponse: unknown) => void
   onError?: (message: string) => void
   themeColor?: string
-}
-
-export const initiateRazorpayPayment = async ({
-  amount,
-  userId,
-  name,
-  email,
-  phone,
-  description = 'Service Payment',
-  onSuccess,
-  onFailure,
-  onError,
-  themeColor = '#7b2cbf',
-}: PaymentOptions): Promise<boolean> => {
-  try {
-    const scriptLoaded = await loadRazorpayScript()
-    if (!scriptLoaded) {
-      onError?.('Payment system loading failed.')
-      return false
-    }
-
-    const orderResult = await createRazorpayOrder(amount, userId)
-    if (!orderResult.success) {
-      onError?.(orderResult.error || 'Failed to create order')
-      return false
-    }
-
-    const { order, key } = orderResult as any
-
-    const options = {
-      key,
-      amount: order.amount,
-      currency: 'INR',
-      name: 'THE FIFTH CUSP',
-      description,
-      order_id: order.id || order.order_id,
-      handler: async (razorResponse: any) => {
-        const verifyResult = await verifyPayment({
-          razorpay_payment_id: razorResponse.razorpay_payment_id,
-          razorpay_order_id: razorResponse.razorpay_order_id,
-          razorpay_signature: razorResponse.razorpay_signature,
-          userId,
-          amount,
-        })
-        if (verifyResult.success) onSuccess?.(verifyResult, razorResponse)
-        else onFailure?.(verifyResult, razorResponse)
-      },
-      prefill: { name: name || '', email: email || '', contact: phone || '' },
-      theme: { color: themeColor },
-      modal: { ondismiss: () => onFailure?.({ success: false, error: 'Payment cancelled' }, null) },
-      notes: { userId, service: description },
-    }
-
-    const rzp = new window.Razorpay(options)
-    rzp.on('payment.failed', (response: any) => {
-      onFailure?.({ success: false, error: 'Payment failed' }, response)
-    })
-    rzp.open()
-    return true
-  } catch (err: any) {
-    onError?.(err.message || 'Payment could not be processed')
-    return false
-  }
-}
-
-export const simulatePayment = (delay = 1500): Promise<Record<string, unknown>> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        simulated: true,
-        paymentId: `sim_${Date.now()}`,
-        orderId: `order_sim_${Date.now()}`,
-      })
-    }, delay)
-  })
+}): Promise<boolean> {
+  _opts.onError?.('Legacy Razorpay flow has been removed. Please use the new checkout.')
+  return false
 }

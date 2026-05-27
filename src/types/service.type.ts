@@ -53,6 +53,8 @@ export interface Service {
   hasSaleBanner: boolean
   discountPercentage: number
   isActiveService: boolean
+  soldCount?: number
+  lastSoldDate?: string
   createdAt?: string
   updatedAt?: string
 }

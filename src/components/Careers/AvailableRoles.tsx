@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useQuery } from '@tanstack/react-query'
-import { MapPin, Briefcase, Clock, ChevronDown, CalendarDays, IndianRupee } from 'lucide-react'
+import { MapPin, Briefcase, ChevronDown, CalendarDays, IndianRupee } from 'lucide-react'
 import api from '@/lib/api/axiosInstance'
 import { CAREERS_CONTENT } from '@/app/(brand)/careers/careers.constants'
 

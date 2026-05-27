@@ -1,7 +1,5 @@
 import EnergyHero from '@/components/Energy/Hero'
 import HowEnergyWorks from '@/components/Energy/HowEnergyWorks'
-import EnergyServices from '@/components/Energy/EnergyServices'
-import EnergyFAQs from '@/components/Energy/EnergyFAQs'
 import FAQSection from '@/components/Home/FAQs'
 import BasicServiceSection from '@/components/common/BasicServices'
 import AdvanceServiceSection from '@/components/common/AdvanceServices'
@@ -12,8 +10,8 @@ export default function EnergyPage() {
     <>
       <EnergyHero />
       <HowEnergyWorks />
-      <BasicServiceSection page="energy" title={ENERGY_CONTENT.services.basicTitle} />
-      <AdvanceServiceSection page="energy" title={ENERGY_CONTENT.services.advancedTitle} />
+      <BasicServiceSection page="energy" title={ENERGY_CONTENT.services.basicTitle} type='basic'/>
+      <AdvanceServiceSection page="energy" title={ENERGY_CONTENT.services.advancedTitle} type='advanced'/>
       <FAQSection
         page="energy"
         title={ENERGY_CONTENT.faqs.title}
