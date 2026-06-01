@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { ENERGY_CONTENT } from '@/app/(brand)/energy/energy.constants'
 import SkeletonImage from '../common/SkeletonImage'
 

@@ -7,7 +7,7 @@ import { fetchServices } from '@/lib/api/services.api'
 interface BasicServiceSectionProps {
   page: string
   title: string
-  type: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology' | 'practice'
+  type?: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology' | 'practice'
   subtitle?: string
 }
 

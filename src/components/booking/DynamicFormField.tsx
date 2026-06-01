@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import type { FormInput } from '@/types/service.type'
 
+export type FormFieldValue = string | number | string[]
+
 interface Props {
   field: FormInput
-  value: any
-  onChange: (val: any) => void
+  value: FormFieldValue | undefined
+  onChange: (val: FormFieldValue) => void
   error?: string
 }
 
@@ -120,7 +122,7 @@ export default function DynamicFormField({ field, value, onChange, error }: Prop
         />
         {field.validation?.maxLength && (
           <p className="mt-0.5 text-right text-xs text-white/30">
-            {(value ?? '').length}/{field.validation.maxLength}
+            {String(value ?? '').length}/{field.validation.maxLength}
           </p>
         )}
         {error && <p className="mt-1 text-xs text-red-400">{error}</p>}

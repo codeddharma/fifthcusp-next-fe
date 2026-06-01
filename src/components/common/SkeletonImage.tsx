@@ -10,6 +10,7 @@ type SkeletonImageProps = ImageProps & {
 export default function SkeletonImage({
   className = '',
   skeletonClassName = '',
+  alt,
   onLoad,
   ...props
 }: SkeletonImageProps) {
@@ -22,6 +23,7 @@ export default function SkeletonImage({
       )}
       <Image
         {...props}
+        alt={alt}
         className={`transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'} ${className}`}
         onLoad={(e) => {
           setLoaded(true)

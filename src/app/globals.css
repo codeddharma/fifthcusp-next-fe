@@ -82,7 +82,7 @@
     background-attachment: fixed;
     color: #fff;
     font-family:
-      'Poppins',
+      var(--font-poppins),
       ui-sans-serif,
       system-ui,
       -apple-system,

@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { X, CheckCircle2, XCircle, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import Button from '@/components/common/Button'
-import DynamicFormField from '@/components/booking/DynamicFormField'
+import DynamicFormField, { type FormFieldValue } from '@/components/booking/DynamicFormField'
 import FileUploadField from '@/components/booking/FileUploadField'
 import { discountedPrice } from '@/lib/utils/pricing'
 import { openRazorpayCheckout } from '@/lib/razorpayHandler'
@@ -76,7 +76,7 @@ function StepIndicator({ step }: { step: Step }) {
 // ---------------------------------------------------------------------------
 function validateForm(
   formInputs: FormInput[],
-  formData: Record<string, any>,
+  formData: Record<string, FormFieldValue>,
   files: Record<string, File[]>,
   fileUploads: Service['fileUploads'],
 ): Record<string, string> {
@@ -100,15 +100,15 @@ function validateForm(
         errors[field.fieldKey] = `Maximum value is ${field.validation.max}.`
     }
     if (field.type === 'email' && val) {
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val)))
         errors[field.fieldKey] = 'Enter a valid email address.'
     }
     if (field.type === 'phonenumber' && val) {
-      if (!/^\d{10}$/.test(val))
+      if (!/^\d{10}$/.test(String(val)))
         errors[field.fieldKey] = 'Enter a valid 10-digit phone number.'
     }
     if (field.type === 'textarea' && val && field.validation?.maxLength) {
-      if (val.length > field.validation.maxLength)
+      if (String(val).length > field.validation.maxLength)
         errors[field.fieldKey] = `Maximum ${field.validation.maxLength} characters allowed.`
     }
   }
@@ -133,7 +133,7 @@ interface BookingModalProps {
 export default function BookingModal({ service, open, onClose }: BookingModalProps) {
   const [step, setStep] = useState<Step>(1)
   const [direction, setDirection] = useState(1)
-  const [formData, setFormData] = useState<Record<string, any>>({})
+  const [formData, setFormData] = useState<Record<string, FormFieldValue>>({})
   const [files, setFiles] = useState<Record<string, File[]>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [orderStatus, setOrderStatus] = useState<OrderStatus>(null)

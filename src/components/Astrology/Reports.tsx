@@ -5,9 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ASTROLOGY_CONTENT } from '@/app/(brand)/astrology/astrology.constants'
 
 export default function ReportsSection() {
-  const {
-    data: _services,
-  } = useQuery({
+  useQuery({
     queryKey: ['services', 'report_basic', 'astrology'],
     queryFn: () => fetchServices('report_basic', 'astrology'),
   })
