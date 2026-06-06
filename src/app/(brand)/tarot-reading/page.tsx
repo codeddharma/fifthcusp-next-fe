@@ -1,8 +1,14 @@
+import type { Metadata } from 'next'
+import { generatePageMetadata } from '@/lib/api/pageMeta.api'
 import TarotHero from '@/components/Tarot/Hero'
 import TheIntuitive from '@/components/Tarot/TheIntuitive'
 import BasicServiceSection from '@/components/common/BasicServices'
 import FAQSection from '@/components/Home/FAQs'
 import { TAROT_CONTENT } from './tarot.constants'
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generatePageMetadata('/tarot-reading')
+}
 
 export default function TarotPage() {
   return (

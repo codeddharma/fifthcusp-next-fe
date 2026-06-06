@@ -14,6 +14,7 @@ import {
   verifyOrderPayment,
   type CreateOrderResponse,
 } from '@/lib/api/orders.api'
+import { validateCoupon, type CouponValidationResult } from '@/lib/api/coupons.api'
 import { useOrderStatusPolling } from '@/hooks/useOrderStatusPolling'
 import type { Service, FormInput } from '@/types/service.type'
 
@@ -140,6 +141,10 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
   const [paying, setPaying] = useState(false)
   const [order, setOrder] = useState<CreateOrderResponse | null>(null)
   const [pollingEnabled, setPollingEnabled] = useState(false)
+  const [couponInput, setCouponInput] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponValidationResult | null>(null)
+  const [couponLoading, setCouponLoading] = useState(false)
+  const [couponError, setCouponError] = useState<string | null>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
 
   useOrderStatusPolling({
@@ -200,6 +205,9 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
         setPaying(false)
         setOrder(null)
         setPollingEnabled(false)
+        setCouponInput('')
+        setAppliedCoupon(null)
+        setCouponError(null)
       }, 300)
     }
   }, [open])
@@ -212,6 +220,26 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
   const goTo = (next: Step) => {
     setDirection(next > step ? 1 : -1)
     setStep(next)
+  }
+
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) return
+    setCouponLoading(true)
+    setCouponError(null)
+    try {
+      const result = await validateCoupon({
+        code: couponInput.trim(),
+        serviceId: service._id,
+        amount: finalPrice,
+      })
+      setAppliedCoupon(result)
+    } catch (e: unknown) {
+      const msg = (e as { response?: { data?: { message?: string } } })?.response?.data?.message ?? 'Invalid coupon code.'
+      setCouponError(msg)
+      setAppliedCoupon(null)
+    } finally {
+      setCouponLoading(false)
+    }
   }
 
   const handleContinue = () => {
@@ -294,6 +322,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
         fd.append('quantity', '1')
         fd.append('formResponses', JSON.stringify(formData))
         fd.append('selectedAddOns', JSON.stringify([]))
+        if (appliedCoupon) fd.append('couponCode', appliedCoupon.code)
         for (const [key, fileList] of Object.entries(files)) {
           for (const file of fileList) fd.append(key, file)
         }
@@ -444,6 +473,32 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                       </div>
                     </div>
 
+                    {/* Coupon input */}
+                    <div className="mt-4 flex gap-2">
+                      <input
+                        type="text"
+                        value={couponInput}
+                        onChange={(e) => { setCouponInput(e.target.value.toUpperCase()); setCouponError(null) }}
+                        placeholder="Coupon code"
+                        className="flex-1 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-brand-purple/50"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleApplyCoupon}
+                        disabled={couponLoading || !couponInput.trim()}
+                      >
+                        {couponLoading ? 'Applying…' : appliedCoupon ? 'Applied ✓' : 'Apply'}
+                      </Button>
+                    </div>
+                    {couponError && <p className="mt-1 text-xs text-red-400">{couponError}</p>}
+                    {appliedCoupon && (
+                      <div className="mt-2 flex items-center justify-between rounded-lg bg-emerald-500/10 px-3 py-2 text-sm">
+                        <span className="text-emerald-400">Coupon <span className="font-mono font-semibold">{appliedCoupon.code}</span> applied!</span>
+                        <span className="font-semibold text-emerald-400">−₹{appliedCoupon.discountAmount.toLocaleString('en-IN')}</span>
+                      </div>
+                    )}
+
                     <p className="mt-4 text-xs leading-relaxed text-white/40">
                       You will be redirected to Razorpay&apos;s secure payment gateway. After successful
                       payment, your booking will be confirmed.
@@ -543,7 +598,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                           Processing…
                         </span>
                       ) : (
-                        `Pay ₹${finalPrice.toLocaleString('en-IN')}`
+                        `Pay ₹${(appliedCoupon ? appliedCoupon.finalAmount : finalPrice).toLocaleString('en-IN')}`
                       )}
                     </Button>
                   </div>

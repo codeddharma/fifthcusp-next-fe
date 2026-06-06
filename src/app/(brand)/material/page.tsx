@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+import { generatePageMetadata } from '@/lib/api/pageMeta.api'
 import MaterialHero from '@/components/Material/Hero'
 import HowItWorks from '@/components/Material/HowItWorks'
 import TailoredProposal from '@/components/Material/TailoredProposal'
@@ -6,6 +8,10 @@ import FAQSection from '@/components/Home/FAQs'
 import Steps from '@/components/common/Steps'
 import Testimonials from '@/components/common/Testimonials'
 import { MATERIAL_CONTENT } from './material.constants'
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generatePageMetadata('/material')
+}
 
 export default function MaterialPage() {
   return (

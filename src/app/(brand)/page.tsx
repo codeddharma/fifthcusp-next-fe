@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+import { generatePageMetadata } from '@/lib/api/pageMeta.api'
 import AboutSection from '@/components/Home/About'
 import AboutYouSection from '@/components/Home/AboutYou'
 import HeroSection from '@/components/Home/Hero'
@@ -7,6 +9,10 @@ import BasicServiceSection from '@/components/common/BasicServices'
 import AdvanceServiceSection from '@/components/common/AdvanceServices'
 import FAQSection from '@/components/Home/FAQs'
 import { HOME_CONTENT } from '@/app/(brand)/home.constants'
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generatePageMetadata('/')
+}
 
 export default function BrandPage() {
   return (

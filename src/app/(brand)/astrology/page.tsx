@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+import { generatePageMetadata } from '@/lib/api/pageMeta.api'
 import AstrologyHero from '@/components/Astrology/Hero'
 import AstrologyIntro from '@/components/Astrology/AstrologyIntro'
 import Karam from '@/components/Astrology/Karam'
@@ -6,6 +8,10 @@ import AdvanceServiceSection from '@/components/common/AdvanceServices'
 import FAQSection from '@/components/Home/FAQs'
 import { ASTROLOGY_CONTENT } from './astrology.constants'
 import ConsultationSection from '@/components/Astrology/Consultation'
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generatePageMetadata('/astrology')
+}
 
 export default function AstrologyPage() {
   return (

@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+import { generatePageMetadata } from '@/lib/api/pageMeta.api'
 import ManifestationHero from '@/components/Manifestation/Hero'
 import ManifestationGallery from '@/components/Manifestation/Gallery'
 import HowManifestationWorks from '@/components/Manifestation/HowManifestationWorks'
@@ -7,6 +9,10 @@ import BasicServiceSection from '@/components/common/BasicServices'
 import AdvanceServiceSection from '@/components/common/AdvanceServices'
 import FAQSection from '@/components/Home/FAQs'
 import { MANIFESTATION_CONTENT } from './manifestation.constants'
+
+export async function generateMetadata(): Promise<Metadata> {
+  return generatePageMetadata('/manifestation')
+}
 
 export default function ManifestationPage() {
   const { services, wellBeingPractices, faqs } = MANIFESTATION_CONTENT
