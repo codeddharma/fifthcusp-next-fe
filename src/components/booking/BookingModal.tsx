@@ -12,6 +12,7 @@ import { openRazorpayCheckout } from '@/lib/razorpayHandler'
 import {
   createOrder,
   verifyOrderPayment,
+  markPaymentAbandoned,
   type CreateOrderResponse,
 } from '@/lib/api/orders.api'
 import { validateCoupon, type CouponValidationResult } from '@/lib/api/coupons.api'
@@ -292,10 +293,13 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
         }
       },
       onDismiss: () => {
-        // Browser closed Razorpay without paying — webhook may still come through. Poll briefly.
+        // Browser closed Razorpay without paying. Flag the order as abandoned (a late
+        // webhook can still flip it to paid), and poll briefly in case payment went through.
+        markPaymentAbandoned(existing.orderNumber).catch(() => undefined)
         setPollingEnabled(true)
       },
       onFailure: () => {
+        markPaymentAbandoned(existing.orderNumber).catch(() => undefined)
         setPaying(false)
         setOrderStatus('failure')
         goTo(3)

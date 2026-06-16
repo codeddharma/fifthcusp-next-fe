@@ -21,7 +21,7 @@ export interface CreateOrderResponse {
 }
 
 export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded'
-export type OrderStatus = 'created' | 'in_progress' | 'on_hold' | 'completed' | 'cancelled'
+export type OrderStatus = 'created' | 'scheduled' | 'in_progress' | 'on_hold' | 'completed' | 'cancelled'
 
 export interface OrderStatusResponse {
   orderNumber: string
@@ -56,4 +56,9 @@ export async function verifyOrderPayment(
 export async function getOrderStatus(orderNumber: string): Promise<OrderStatusResponse> {
   const res = await api.get<{ data: OrderStatusResponse }>(`/v1/orders/${orderNumber}/status`)
   return res.data.data
+}
+
+/** Flag a still-pending order as abandoned when the customer closes/cancels checkout. */
+export async function markPaymentAbandoned(orderNumber: string): Promise<void> {
+  await api.post(`/v1/orders/${orderNumber}/payment-abandoned`)
 }
