@@ -2,12 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, CheckCircle2, XCircle, Loader2 } from 'lucide-react'
+import { X, CheckCircle2, XCircle, Loader2, MessageCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import Button from '@/components/common/Button'
 import DynamicFormField, { type FormFieldValue } from '@/components/booking/DynamicFormField'
 import FileUploadField from '@/components/booking/FileUploadField'
 import { discountedPrice } from '@/lib/utils/pricing'
+import { whatsappLink } from '@/lib/whatsapp'
 import { openRazorpayCheckout } from '@/lib/razorpayHandler'
 import {
   createOrder,
@@ -405,6 +406,17 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                     <div className="mb-2">
                       <h2 className="text-lg font-semibold text-white">{service.title}</h2>
                       <p className="text-sm text-white/50">{service.subtitle}</p>
+                      {whatsappLink() && (
+                        <a
+                          href={whatsappLink(`I'd like to know more about ${service.title}`)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-3 inline-flex items-center gap-2 rounded-xl border border-purple-500 px-4 py-1.5 text-xs font-semibold tracking-wide text-purple-400 transition-all duration-200 hover:bg-purple-500/10 active:bg-purple-500/20"
+                        >
+                          <MessageCircle size={14} />
+                          Know more on WhatsApp
+                        </a>
+                      )}
                     </div>
 
                     {sortedInputs.map((field) => (

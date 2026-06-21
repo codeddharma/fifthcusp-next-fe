@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Poppins, Cormorant_Garamond, Inter } from 'next/font/google'
 import { UserProvider } from '@/context/UserContext'
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics'
 import './globals.css'
 
 const poppins = Poppins({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <UserProvider>{children}</UserProvider>
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+        <GoogleAnalytics />
       </body>
     </html>
   )

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import SearchBar from '@/components/layout/SearchBar'
 
 const primaryLinks = [
   { name: 'Home', path: '/' },
@@ -79,6 +80,7 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
+          <SearchBar />
         </div>
 
         {/* Mobile hamburger */}
@@ -96,6 +98,9 @@ export default function Navbar() {
       {/* Mobile panel */}
       {isMobileMenuOpen && (
         <div className="nav:hidden absolute top-[72px] left-0 right-0 grid gap-[14px] px-4 py-[14px] pb-[18px] border-b border-white/[0.12] bg-(--color-bg-panel-solid) shadow-(--shadow-mobile-panel) backdrop-blur-[18px]">
+          <div className="flex justify-start">
+            <SearchBar />
+          </div>
           <div className="grid gap-1">
             {primaryLinks.map((item) => (
               <Link

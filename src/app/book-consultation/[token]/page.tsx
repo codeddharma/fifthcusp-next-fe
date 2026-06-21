@@ -162,7 +162,7 @@ export default function BookConsultationPage() {
           <CheckCircle2 size={56} className="text-green-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Consultation Confirmed!</h1>
           <p className="text-gray-500 mb-6">
-            You're all set. Your session details are below.
+            You&apos;re all set. Your session details are below.
           </p>
           <div className="bg-purple-50 rounded-xl p-5 text-left mb-6">
             <p className="text-xs text-gray-400 mb-1">Date &amp; Time</p>

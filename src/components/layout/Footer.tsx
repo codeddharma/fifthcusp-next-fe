@@ -3,6 +3,7 @@ import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { Mail, Phone } from 'lucide-react'
 import { FaInstagram, FaLinkedinIn, FaWhatsapp } from 'react-icons/fa'
+import { whatsappLink } from '@/lib/whatsapp'
 
 const pageLinks = [
   { label: 'Home', href: '/' },
@@ -62,7 +63,7 @@ export default function Footer() {
           </h3>
 
           <div className="mb-5 flex gap-3">
-            <SocialLink href="https://wa.me/919999999999" label="WhatsApp">
+            <SocialLink href={whatsappLink() || 'https://wa.me/919999999999'} label="WhatsApp">
               <FaWhatsapp />
             </SocialLink>
             <SocialLink href="https://linkedin.com/in/yourprofile" label="LinkedIn">

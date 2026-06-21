@@ -10,3 +10,11 @@ export async function fetchServices(
   })
   return res.data.data
 }
+
+/** Fetches every active service (no type filter) — used by the header search. */
+export async function fetchAllServices() {
+  const res = await api.get<ServicesResponse>('/v1/services', {
+    params: { active: true },
+  })
+  return res.data.data
+}

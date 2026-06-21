@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Card from '@/components/common/Card'
 import Button from '@/components/common/Button'
 import BookingModal from '@/components/booking/BookingModal'
@@ -9,12 +9,37 @@ import type { Service } from '@/types/service.type'
 
 export function ServiceCard({ service }: { service: Service }) {
   const [modalOpen, setModalOpen] = useState(false)
+  const [highlighted, setHighlighted] = useState(false)
   const { title, subtitle, description, price, isInSale, saleTitle, discountPercentage } = service
   const finalPrice = isInSale ? discountedPrice(price, discountPercentage) : price
 
+  const anchorId = `service-${service.sku}`
+
+  // When the URL hash targets this card (e.g. from the header search), scroll to
+  // it and briefly highlight it. Handles both first load and same-page navigation.
+  useEffect(() => {
+    const focusIfMatches = () => {
+      if (typeof window === 'undefined' || window.location.hash !== `#${anchorId}`) return
+      const el = document.getElementById(anchorId)
+      if (!el) return
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      setHighlighted(true)
+      window.setTimeout(() => setHighlighted(false), 2000)
+    }
+    focusIfMatches()
+    window.addEventListener('hashchange', focusIfMatches)
+    return () => window.removeEventListener('hashchange', focusIfMatches)
+  }, [anchorId])
+
   return (
     <>
-      <Card hover className="relative flex flex-col gap-4 overflow-hidden p-6">
+      <Card
+        id={anchorId}
+        hover
+        className={`relative flex scroll-mt-28 flex-col gap-4 overflow-hidden p-6 transition-shadow duration-500 ${
+          highlighted ? 'ring-2 ring-purple-400 shadow-(--shadow-card-hover)' : ''
+        }`}
+      >
         {isInSale && (
           <div className="absolute right-0 top-0 h-24 w-24 overflow-hidden">
             <span className="absolute right-[-28px] top-[18px] w-[110px] rotate-45 bg-gradient-to-r from-purple-600 to-fuchsia-500 py-1 text-center text-[10px] font-bold tracking-widest text-white shadow-md shadow-purple-900/50">
