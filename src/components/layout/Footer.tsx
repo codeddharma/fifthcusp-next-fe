@@ -66,10 +66,13 @@ export default function Footer() {
             <SocialLink href={whatsappLink() || 'https://wa.me/919999999999'} label="WhatsApp">
               <FaWhatsapp />
             </SocialLink>
-            <SocialLink href="https://linkedin.com/in/yourprofile" label="LinkedIn">
+            <SocialLink
+              href="https://www.linkedin.com/in/the-fifth-cusp-55258a418/"
+              label="LinkedIn"
+            >
               <FaLinkedinIn />
             </SocialLink>
-            <SocialLink href="https://instagram.com/yourprofile" label="Instagram">
+            <SocialLink href="https://instagram.com/thefifthcusp" label="Instagram">
               <FaInstagram />
             </SocialLink>
           </div>
@@ -83,11 +86,11 @@ export default function Footer() {
               enquiry@thefifthcusp.com
             </a>
             <a
-              href="tel:+919876543210"
+              href="tel:+919773723067"
               className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-brand-purple/10 hover:text-brand-purple"
             >
               <Phone size={16} />
-              +91 98765 43210
+              +91 97737 23067
             </a>
           </div>
         </section>
