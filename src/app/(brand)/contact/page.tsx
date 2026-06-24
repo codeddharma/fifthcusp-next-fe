@@ -68,9 +68,9 @@ export default function ContactPage() {
       <section>
         <h2>Business Details</h2>
         <p>
-          [LEGAL ENTITY NAME]
-          <br />
-          [REGISTERED ADDRESS]
+          The Fifthcusp
+          {/* <br />
+          [REGISTERED ADDRESS] */}
           <br />
           [GSTIN / REG NO. — if applicable]
         </p>

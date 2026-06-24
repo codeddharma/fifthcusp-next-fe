@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
       intro={
         <>
           This Privacy Policy explains how The Fifth Cusp (&ldquo;we&rdquo;,
-          &ldquo;us&rdquo;, &ldquo;our&rdquo;), operated by [LEGAL ENTITY NAME],
+          &ldquo;us&rdquo;, &ldquo;our&rdquo;), operated by The Fifthcusp,
           collects, uses, discloses, and safeguards your information when you visit
           our website or use our services. By using our website, you consent to the
           practices described in this policy.
@@ -132,7 +132,7 @@ export default function PrivacyPolicyPage() {
           </a>{' '}
           or call <a href="tel:+919773732067">+91 97737 32067</a>.
           <br />
-          [LEGAL ENTITY NAME], [REGISTERED ADDRESS].
+          The Fifthcusp
         </p>
       </section>
     </LegalPageShell>

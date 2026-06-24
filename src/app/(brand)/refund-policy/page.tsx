@@ -16,7 +16,7 @@ export default function RefundPolicyPage() {
         <>
           We want you to be satisfied with your experience at The Fifth Cusp. This
           policy explains when cancellations and refunds are possible for our digital
-          and consultation services, operated by [LEGAL ENTITY NAME].
+          and consultation services, operated by The Fifthcusp.
         </>
       }
     >
@@ -99,7 +99,7 @@ export default function RefundPolicyPage() {
           </a>{' '}
           or call <a href="tel:+919773732067">+91 97737 32067</a>.
           <br />
-          [LEGAL ENTITY NAME], [REGISTERED ADDRESS].
+          The Fifthcusp.
         </p>
       </section>
     </LegalPageShell>

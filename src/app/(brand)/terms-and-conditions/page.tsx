@@ -15,7 +15,7 @@ export default function TermsAndConditionsPage() {
       intro={
         <>
           These Terms &amp; Conditions govern your use of the The Fifth Cusp website
-          and services, operated by [LEGAL ENTITY NAME]. By accessing our website or
+          and services, operated by The Fifthcusp. By accessing our website or
           purchasing a service, you agree to be bound by these terms.
         </>
       }
@@ -115,7 +115,7 @@ export default function TermsAndConditionsPage() {
           </a>{' '}
           or call <a href="tel:+919773732067">+91 97737 32067</a>.
           <br />
-          [LEGAL ENTITY NAME], [REGISTERED ADDRESS].
+          The Fifthcusp.
         </p>
       </section>
     </LegalPageShell>
