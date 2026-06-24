@@ -4,6 +4,7 @@ import TarotHero from '@/components/Tarot/Hero'
 import TheIntuitive from '@/components/Tarot/TheIntuitive'
 import BasicServiceSection from '@/components/common/BasicServices'
 import FAQSection from '@/components/Home/FAQs'
+import WhatsAppCTA from '@/components/common/WhatsAppCTA'
 import { TAROT_CONTENT } from './tarot.constants'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -21,6 +22,7 @@ export default function TarotPage() {
         title={TAROT_CONTENT.faqs.title}
         subtitle={TAROT_CONTENT.faqs.subtitle}
       />
+      <WhatsAppCTA message="Hi! I would like to know more about your tarot reading services." />
     </>
   )
 }

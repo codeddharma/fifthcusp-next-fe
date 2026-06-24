@@ -160,7 +160,7 @@ function CareerCard({ career, index }: { career: Career; index: number }) {
               </div>
 
               <a
-                href={`mailto:careers@thefifthcusp.com?subject=Application – ${career.title}`}
+                href={`mailto:support.thefifthcusp@gmail.com?subject=Application – ${career.title}`}
                 className="inline-block rounded-full bg-[#a855f7] px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-80"
               >
                 Apply Now

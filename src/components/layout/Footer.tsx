@@ -20,6 +20,13 @@ const serviceLinks = [
   { label: 'Tarot Reading', href: '/tarot-reading' },
 ]
 
+const legalLinks = [
+  { label: 'Privacy Policy', href: '/privacy-policy' },
+  { label: 'Terms & Conditions', href: '/terms-and-conditions' },
+  { label: 'Refund Policy', href: '/refund-policy' },
+  { label: 'Contact Us', href: '/contact' },
+]
+
 export default function Footer() {
   const currentYear = new Date().getFullYear()
 
@@ -51,9 +58,10 @@ export default function Footer() {
           </p>
         </section>
 
-        <section className="flex gap-8 pt-2">
+        <section className="flex flex-wrap gap-8 pt-2">
           <FooterColumn title="Pages" links={pageLinks} />
           <FooterColumn title="Services" links={serviceLinks} />
+          <FooterColumn title="Legal" links={legalLinks} />
         </section>
 
         <section className="pt-2">
@@ -63,7 +71,7 @@ export default function Footer() {
           </h3>
 
           <div className="mb-5 flex gap-3">
-            <SocialLink href={whatsappLink() || 'https://wa.me/919999999999'} label="WhatsApp">
+            <SocialLink href={whatsappLink() || 'https://wa.me/919773732067'} label="WhatsApp">
               <FaWhatsapp />
             </SocialLink>
             <SocialLink
@@ -79,18 +87,18 @@ export default function Footer() {
 
           <div className="space-y-2 text-sm text-text-pearl">
             <a
-              href="mailto:enquiry@thefifthcusp.com"
+              href="mailto:support.thefifthcusp@gmail.com"
               className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-brand-purple/10 hover:text-brand-purple"
             >
               <Mail size={16} />
-              enquiry@thefifthcusp.com
+              support.thefifthcusp@gmail.com
             </a>
             <a
-              href="tel:+919773723067"
+              href="tel:+919773732067"
               className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-brand-purple/10 hover:text-brand-purple"
             >
               <Phone size={16} />
-              +91 97737 23067
+              +91 97737 32067
             </a>
           </div>
         </section>

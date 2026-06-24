@@ -8,6 +8,7 @@ import WellBeing from '@/components/Manifestation/WellBeing'
 import BasicServiceSection from '@/components/common/BasicServices'
 import AdvanceServiceSection from '@/components/common/AdvanceServices'
 import FAQSection from '@/components/Home/FAQs'
+import WhatsAppCTA from '@/components/common/WhatsAppCTA'
 import { MANIFESTATION_CONTENT } from './manifestation.constants'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -56,6 +57,7 @@ export default function ManifestationPage() {
         title={faqs.title}
         subtitle={faqs.subtitle}
       />
+      <WhatsAppCTA message="Hi! I would like to know more about your manifestation services." />
     </>
   )
 }

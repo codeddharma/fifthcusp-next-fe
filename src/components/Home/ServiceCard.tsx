@@ -5,6 +5,7 @@ import Card from '@/components/common/Card'
 import Button from '@/components/common/Button'
 import BookingModal from '@/components/booking/BookingModal'
 import { discountedPrice } from '@/lib/utils/pricing'
+import { whatsappLink } from '@/lib/whatsapp'
 import type { Service } from '@/types/service.type'
 
 export function ServiceCard({ service }: { service: Service }) {
@@ -67,9 +68,25 @@ export function ServiceCard({ service }: { service: Service }) {
             )}
           </div>
 
-          <Button size="md" onClick={() => setModalOpen(true)}>
-            Affirm
-          </Button>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Button
+              size="md"
+              variant="outline"
+              onClick={() =>
+                window.open(
+                  whatsappLink(`I'd like to know more about ${title}`) ||
+                    'https://wa.me/919773732067',
+                  '_blank',
+                  'noopener,noreferrer',
+                )
+              }
+            >
+              Know More
+            </Button>
+            <Button size="md" onClick={() => setModalOpen(true)}>
+              Affirm
+            </Button>
+          </div>
         </div>
       </Card>
 

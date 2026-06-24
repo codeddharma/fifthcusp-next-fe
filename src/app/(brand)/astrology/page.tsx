@@ -6,6 +6,7 @@ import Karam from '@/components/Astrology/Karam'
 import BasicServiceSection from '@/components/common/BasicServices'
 import AdvanceServiceSection from '@/components/common/AdvanceServices'
 import FAQSection from '@/components/Home/FAQs'
+import WhatsAppCTA from '@/components/common/WhatsAppCTA'
 import { ASTROLOGY_CONTENT } from './astrology.constants'
 import ConsultationSection from '@/components/Astrology/Consultation'
 
@@ -43,6 +44,7 @@ export default function AstrologyPage() {
         title={ASTROLOGY_CONTENT.faqs.title}
         subtitle={ASTROLOGY_CONTENT.faqs.subtitle}
       />
+      <WhatsAppCTA message="Hi! I would like to know more about your astrology services." />
     </>
   )
 }

@@ -7,6 +7,7 @@ import MaterialServices from '@/components/Material/MaterialServices'
 import FAQSection from '@/components/Home/FAQs'
 import Steps from '@/components/common/Steps'
 import Testimonials from '@/components/common/Testimonials'
+import WhatsAppCTA from '@/components/common/WhatsAppCTA'
 import { MATERIAL_CONTENT } from './material.constants'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,6 +28,7 @@ export default function MaterialPage() {
         title={MATERIAL_CONTENT.faqs.title}
         subtitle={MATERIAL_CONTENT.faqs.subtitle}
       />
+      <WhatsAppCTA message="Hi! I would like to know more about your material & wellbeing services." />
     </>
   )
 }
