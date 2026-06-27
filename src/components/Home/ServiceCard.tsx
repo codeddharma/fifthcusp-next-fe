@@ -49,12 +49,12 @@ export function ServiceCard({ service }: { service: Service }) {
           </div>
         )}
 
-        <div className="flex flex-col gap-1 pr-16">
+        <div className="flex flex-col gap-1 text-center">
           <h3 className="text-lg font-semibold text-white">{title}</h3>
           <p className="text-sm text-white/50">{subtitle}</p>
         </div>
 
-        <p className="flex-1 text-sm leading-relaxed text-white/70">{description}</p>
+        <p className="flex-1 text-sm leading-relaxed text-justify text-white/70">{description}</p>
 
         <div className="flex items-center justify-between gap-4 pt-2">
           <div className="flex items-baseline gap-2">

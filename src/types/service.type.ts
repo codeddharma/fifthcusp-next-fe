@@ -36,6 +36,11 @@ export interface FileUpload {
   order: number
 }
 
+export interface ServicePage {
+  page: string
+  order: number
+}
+
 export interface Service {
   _id: string
   sku: string
@@ -44,7 +49,7 @@ export interface Service {
   description: string
   price: number
   type: string
-  pages: string[]
+  pages: ServicePage[]
   formInputs: FormInput[]
   fileUploads: FileUpload[]
   addOns: unknown[]
@@ -53,6 +58,7 @@ export interface Service {
   hasSaleBanner: boolean
   discountPercentage: number
   isActiveService: boolean
+  requiresConsultation?: boolean
   soldCount?: number
   lastSoldDate?: string
   createdAt?: string

@@ -24,6 +24,10 @@ export const TAROT_CONTENT = {
   services: {
     title: 'Services',
   },
+  advancedServices: {
+    title: 'Advanced Readings',
+    subtitle: 'Deeper, multi-spread sessions for life-path and long-term guidance',
+  },
   faqs: {
     title: 'FAQs',
     subtitle: 'Everything you need to know about Tarot',

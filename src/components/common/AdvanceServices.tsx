@@ -4,10 +4,19 @@ import { useQuery } from '@tanstack/react-query'
 import { ServiceCard, SkeletonCard } from '@/components/Home/ServiceCard'
 import { fetchServices } from '@/lib/api/services.api'
 
+const HIDDEN_SERVICE_SKUS = new Set(['IKIGAI'])
+
 interface AdvanceServiceSectionProps {
   page: string
   title: string
-  type?: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology' | 'practice'
+  type?:
+    | 'basic'
+    | 'advanced'
+    | 'consultation'
+    | 'report_basic'
+    | 'report_advanced'
+    | 'numerology'
+    | 'practice'
   subtitle?: string
 }
 
@@ -26,6 +35,10 @@ export default function AdvanceServiceSection({
     queryFn: () => fetchServices(type, page),
   })
 
+  const visibleServices = services?.filter(
+    (service) => !HIDDEN_SERVICE_SKUS.has(service.sku.toUpperCase())
+  )
+
   return (
     <section id="advanced-services" className="mx-auto max-w-6xl px-5 py-12">
       <div className="mb-10 text-center">
@@ -42,7 +55,7 @@ export default function AdvanceServiceSection({
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
-          : services?.map((service) => <ServiceCard key={service._id} service={service} />)}
+          : visibleServices?.map((service) => <ServiceCard key={service._id} service={service} />)}
       </div>
     </section>
   )

@@ -1,10 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MATERIAL_CONTENT } from '@/app/(brand)/material/material.constants'
+import { WEALTH_CONTENT } from '@/app/(brand)/wealth/wealth.constants'
 
 export default function TailoredProposal() {
-  const { title, paragraphs, whoIsItFor, finalHighlight } = MATERIAL_CONTENT.tailoredProposal
+  const { title, paragraphs, whoIsItFor, finalHighlight } = WEALTH_CONTENT.tailoredProposal
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-12">

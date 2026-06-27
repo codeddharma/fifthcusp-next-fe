@@ -519,6 +519,12 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                       You will be redirected to Razorpay&apos;s secure payment gateway. After successful
                       payment, your booking will be confirmed.
                     </p>
+
+                    <div className="mt-3 rounded-lg bg-amber-500/10 px-3 py-2 text-xs leading-relaxed text-amber-400">
+                      {service.requiresConsultation
+                        ? "Note: This is a consultation-based service. You will receive a consultation scheduling email to book your session after payment."
+                        : 'Note: You will receive an order confirmation email once your payment is successfully processed.'}
+                    </div>
                   </motion.div>
                 )}
 

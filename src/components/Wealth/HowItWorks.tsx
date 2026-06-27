@@ -1,10 +1,10 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MATERIAL_CONTENT } from '@/app/(brand)/material/material.constants'
+import { WEALTH_CONTENT } from '@/app/(brand)/wealth/wealth.constants'
 
 export default function HowItWorks() {
-  const { title, paragraphs, highlight } = MATERIAL_CONTENT.howItWorks
+  const { title, paragraphs, highlight } = WEALTH_CONTENT.howItWorks
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-12">

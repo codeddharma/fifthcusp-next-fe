@@ -1,12 +1,12 @@
-export const MATERIAL_CONTENT = {
+export const WEALTH_CONTENT = {
   hero: {
     image: {
-      src: 'https://i.etsystatic.com/50315636/r/il/4448f3/6099304610/il_1080xN.6099304610_8ps8.jpg',
-      alt: 'Material Astrology',
-      width: 360,
-      height: 360,
+      src: '/assets/Material_Final.png',
+      alt: 'Wealth',
+      width: 380,
+      height: 380,
     },
-    title: 'MATERIAL',
+    title: 'WEALTH',
     description:
       'Material is the architecture of wealth creation through energy, intention, environment, and aligned action. It is where your inner frequency meets real world strategy. Wealth is not an accident. It is a vibration you cultivate, a system you build, and a reality you consciously hold. In this space, we bring together Astrology, Energy Reading, Vastu, Numerology, Wealth Psychology, and complete calibration to help you create a life that feels abundant, secure, and expansive.',
   },
@@ -114,6 +114,6 @@ export const MATERIAL_CONTENT = {
   },
   faqs: {
     title: 'FAQs',
-    subtitle: 'Everything you need to know about Material',
+    subtitle: 'Everything you need to know about Wealth',
   },
 }

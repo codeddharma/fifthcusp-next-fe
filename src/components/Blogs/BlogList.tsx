@@ -8,7 +8,7 @@ import BlogCard from '@/components/cards/BlogCard'
 import { fetchBlogs } from '@/lib/api/blogs.api'
 import { BLOGS_CONTENT } from '@/app/(brand)/blogs/blogs.constants'
 
-const CATEGORIES = ['All', 'Vedic Astrology', 'Vastu', 'Numerology', 'Energy', 'Tarot', 'Material']
+const CATEGORIES = ['All', 'Vedic Astrology', 'Vastu', 'Numerology', 'Energy', 'Tarot', 'Wealth']
 
 function SkeletonCard() {
   return (

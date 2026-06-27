@@ -35,7 +35,7 @@ export const Images = {
     movement: getCloudinaryImage('movement-service_002', { width: 800, crop: 'fill' }),
     spaceVastu: getCloudinaryImage('space-vastu-service_003', { width: 800, crop: 'fill' }),
     manifestation: getCloudinaryImage('manifestation-service_004', { width: 800, crop: 'fill' }),
-    material: getCloudinaryImage('material-service_005', { width: 800, crop: 'fill' }),
+    wealth: getCloudinaryImage('material-service_005', { width: 800, crop: 'fill' }),
   },
   blogs: {
     blog1: getCloudinaryImage('blog1_001', { width: 600, crop: 'fill' }),

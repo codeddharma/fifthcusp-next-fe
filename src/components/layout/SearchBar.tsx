@@ -61,7 +61,7 @@ export default function SearchBar() {
   const handleSelect = (service: Service) => {
     setOpen(false)
     setQuery('')
-    router.push(`/${service.pages[0]}#service-${service.sku}`)
+    router.push(`/${service.pages[0].page}#service-${service.sku}`)
   }
 
   return (

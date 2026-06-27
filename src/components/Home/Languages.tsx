@@ -1,4 +1,14 @@
+import Link from 'next/link'
 import { HOME_CONTENT } from '@/app/(brand)/home.constants'
+
+const LANGUAGE_ROUTES: Record<string, string> = {
+  ASTROLOGY: '/astrology',
+  'VASTU SHASTRA': '/vastu',
+  NUMEROLOGY: '/astrology',
+  'ENERGY READING': '/energy',
+  'TAROT READING': '/tarot-reading',
+  MANIFESTATION: '/manifestation',
+}
 
 export default function LanguagesSection() {
   return (
@@ -11,8 +21,9 @@ export default function LanguagesSection() {
       </div>
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {HOME_CONTENT.languages.services.map((service) => (
-          <div
+          <Link
             key={service.name.replace(' ', '_').toLowerCase()}
+            href={LANGUAGE_ROUTES[service.name] ?? '/'}
             className="cosmic-glass group flex min-h-[260px] flex-col rounded-[20px] p-6 transition duration-300 hover:-translate-y-2 hover:bg-white/[0.08] hover:shadow-[0_15px_40px_rgba(138,43,226,0.25)]"
           >
             <h3 className="mb-4 text-xl font-semibold uppercase tracking-wide text-white">
@@ -21,7 +32,7 @@ export default function LanguagesSection() {
             <p className="flex-1 whitespace-pre-line text-sm leading-6 text-[#c4c4d8]">
               {service.desc}
             </p>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

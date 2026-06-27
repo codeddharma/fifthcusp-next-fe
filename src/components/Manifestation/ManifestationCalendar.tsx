@@ -266,7 +266,10 @@ export default function ManifestationCalendar() {
                         </span>
                       </div>
                       {ev.description && (
-                        <p className="text-sm leading-relaxed text-[#c4b5fd]">{ev.description}</p>
+                        <div
+                          className="rich-html text-sm leading-relaxed text-[#c4b5fd]"
+                          dangerouslySetInnerHTML={{ __html: ev.description }}
+                        />
                       )}
                     </div>
                   ))}

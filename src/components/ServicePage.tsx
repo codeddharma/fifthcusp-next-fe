@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from '@/lib/api/axiosInstance'
 import { toast } from 'sonner'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { initiateRazorpayPayment } from '@/lib/razorpayHandler'
+import { whatsappLink } from '@/lib/whatsapp'
 
 interface Service {
   _id: string
@@ -18,6 +18,7 @@ interface Service {
   tag?: string
   status?: string
   type?: string
+  sku?: string
 }
 
 interface FAQ {
@@ -52,6 +53,7 @@ interface ServicePageProps {
 }
 
 const BOOKING_API = 'https://astro-5dcy.onrender.com/api/bookings'
+const HIDDEN_SERVICE_SKUS = new Set(['IKIGAI'])
 
 const defaultForm: BookingForm = {
   name: '',
@@ -94,7 +96,13 @@ export default function ServicePage({
       .then((res) => {
         const list = res.data?.services || res.data || []
         setServices(
-          Array.isArray(list) ? list.filter((s: Service) => s.status === 'active' || !s.status) : []
+          Array.isArray(list)
+            ? list.filter(
+                (s: Service) =>
+                  (s.status === 'active' || !s.status) &&
+                  !HIDDEN_SERVICE_SKUS.has((s.sku || s.key || '').toUpperCase())
+              )
+            : []
         )
       })
       .catch(() => {})
@@ -261,18 +269,24 @@ export default function ServicePage({
                   {s.price === 0 ? 'FREE' : `₹${s.price}`}
                 </div>
                 <div className="flex gap-2 flex-wrap justify-center">
-                  <Link
-                    href="/know-more"
+                  <a
+                    href={
+                      whatsappLink(
+                        `I'd like to know more about ${s.title || s.name || 'this service'}`
+                      ) || 'https://wa.me/919773732067'
+                    }
+                    target="_blank"
+                    rel="noreferrer"
                     className="flex-1 text-center px-3 py-2 rounded-lg border border-white/20 text-xs font-semibold hover:bg-white/10 transition-colors"
                   >
                     KNOW MORE
-                  </Link>
-                  <Link
+                  </a>
+                  {/* <Link
                     href="/experiences"
                     className="flex-1 text-center px-3 py-2 rounded-lg border border-white/20 text-xs font-semibold hover:bg-white/10 transition-colors"
                   >
                     EXPERIENCE
-                  </Link>
+                  </Link> */}
                   <button
                     onClick={() => handleSelectService(s)}
                     className="flex-1 px-3 py-2 rounded-lg text-xs font-semibold transition-colors"

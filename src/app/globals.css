@@ -41,6 +41,9 @@
   --color-purple-26: rgba(147, 51, 234, 0.26);
   --color-purple-35: rgba(147, 51, 234, 0.35);
 
+  /* Gold accent (Wealth nav link) */
+  --color-brand-gold: #d4af37;
+
   /* Glow overlays */
   --color-glow-violet: rgba(138, 43, 226, 0.25);
   --color-glow-lavender: rgba(183, 132, 247, 0.35);
@@ -159,6 +162,23 @@
   backdrop-filter: blur(15px) saturate(180%);
 }
 
+.disclaimer-banner-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: disclaimer-marquee 22s linear infinite;
+}
+
+@keyframes disclaimer-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .hamburger-btn {
   position: relative;
   top: 16px;
@@ -218,4 +238,36 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Renders admin-authored Tiptap HTML (manifestation calendar, blog content, etc). */
+.rich-html p {
+  margin: 0 0 0.6em;
+}
+
+.rich-html ul,
+.rich-html ol {
+  margin: 0 0 0.6em;
+  padding-left: 1.25em;
+}
+
+.rich-html ul {
+  list-style: disc;
+}
+
+.rich-html ol {
+  list-style: decimal;
+}
+
+.rich-html li {
+  margin: 0.2em 0;
+}
+
+.rich-html a {
+  color: var(--color-brand-violet);
+  text-decoration: underline;
+}
+
+.rich-html strong {
+  color: #fff;
 }

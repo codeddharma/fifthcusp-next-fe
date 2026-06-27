@@ -13,8 +13,8 @@ const primaryLinks = [
   { name: 'Astrology', path: '/astrology' },
   { name: 'Vastu', path: '/vastu' },
   { name: 'Manifestation', path: '/manifestation' },
-  { name: 'Material', path: '/material' },
-  { name: 'Tarot Reading', path: '/tarot-reading' },
+  { name: 'Wealth', path: '/wealth' },
+  { name: 'Tarot', path: '/tarot-reading' },
   { name: 'Careers', path: '/careers' },
   { name: 'Blogs', path: '/blogs' },
 ]
@@ -27,11 +27,13 @@ const logo = {
 }
 
 const navItemBase =
-  'inline-flex items-center min-h-[40px] rounded-full text-text-faint text-[13px] font-bold tracking-[0.04em] uppercase transition-[background,color,transform] duration-200'
+  'inline-flex items-center min-h-[40px] rounded-full text-[13px] font-bold tracking-[0.04em] uppercase transition-[background,color,transform] duration-200'
 
 const navItemHover = 'hover:bg-(--color-purple-22) hover:text-white hover:-translate-y-px'
 
 const activeClass = 'bg-(--color-purple-26) text-white'
+
+const goldNavItem = 'text-(--color-brand-gold)'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -75,7 +77,7 @@ export default function Navbar() {
             <Link
               key={item.path}
               href={item.path}
-              className={`${navItemBase} px-[14px] ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
+              className={`${navItemBase} px-[14px] ${item.name === 'Wealth' ? goldNavItem : 'text-text-faint'} ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
             >
               {item.name}
             </Link>
@@ -106,7 +108,7 @@ export default function Navbar() {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`${navItemBase} px-3 ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
+                className={`${navItemBase} px-3 ${item.name === 'Wealth' ? goldNavItem : 'text-text-faint'} ${navItemHover} ${pathname === item.path ? activeClass : ''}`}
               >
                 {item.name}
               </Link>

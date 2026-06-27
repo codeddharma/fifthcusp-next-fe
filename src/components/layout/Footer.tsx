@@ -16,8 +16,8 @@ const serviceLinks = [
   {label:"Astrology", href: '/astrology'},
   { label: 'Manifestation', href: '/manifestation' },
   { label: 'Vastu', href: '/vastu' },
-  { label: 'Material', href: '/material' },
-  { label: 'Tarot Reading', href: '/tarot-reading' },
+  { label: 'Wealth', href: '/wealth', gold: true },
+  { label: 'Tarot', href: '/tarot-reading' },
 ]
 
 const legalLinks = [
@@ -117,7 +117,7 @@ function FooterColumn({
   links,
 }: {
   title: string
-  links: Array<{ label: string; href: string }>
+  links: Array<{ label: string; href: string; gold?: boolean }>
 }) {
   return (
     <div className="flex-1">
@@ -130,7 +130,9 @@ function FooterColumn({
           <li key={link.href + link.label}>
             <Link
               href={link.href}
-              className="text-sm text-text-pearl transition hover:translate-x-1 hover:text-white"
+              className={`text-sm transition hover:translate-x-1 hover:text-white ${
+                link.gold ? 'text-(--color-brand-gold)' : 'text-text-pearl'
+              }`}
             >
               {link.label}
             </Link>

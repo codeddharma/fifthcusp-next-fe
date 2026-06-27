@@ -1,8 +1,8 @@
 import Image from 'next/image'
-import { MATERIAL_CONTENT } from '@/app/(brand)/material/material.constants'
+import { WEALTH_CONTENT } from '@/app/(brand)/wealth/wealth.constants'
 
-export default function MaterialHero() {
-  const { image, title, description } = MATERIAL_CONTENT.hero
+export default function WealthHero() {
+  const { image, title, description } = WEALTH_CONTENT.hero
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-16 sm:py-20">

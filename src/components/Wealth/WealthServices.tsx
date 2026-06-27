@@ -1,10 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { MATERIAL_CONTENT } from '@/app/(brand)/material/material.constants'
+import { FaWhatsapp } from 'react-icons/fa'
+import { WEALTH_CONTENT } from '@/app/(brand)/wealth/wealth.constants'
+import { whatsappLink } from '@/lib/whatsapp'
 
-export default function MaterialServices() {
-  const { title, items } = MATERIAL_CONTENT.services
+export default function WealthServices() {
+  const { title, items } = WEALTH_CONTENT.services
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-12">
@@ -32,12 +34,25 @@ export default function MaterialServices() {
               <span className="mb-3 inline-block rounded-full bg-[#ff00ff]/15 px-3 py-1 text-xs font-bold text-[#ff00ff]">
                 {service.tag}
               </span>
-              <h3 className="mb-3 text-lg font-bold text-white">{service.title}</h3>
-              <p className="text-sm leading-6 text-[#c4b5fd]">{service.description}</p>
+              <h3 className="mb-3 text-center text-lg font-bold text-white">{service.title}</h3>
+              <p className="text-justify text-sm leading-6 text-[#c4b5fd]">{service.description}</p>
             </div>
 
-            <div className="mt-6 flex items-center justify-between">
+            <div className="mt-6 flex items-center justify-between gap-3">
               <span className="text-2xl font-extrabold text-[#ff00ff]">₹{service.price}</span>
+              <a
+                href={
+                  whatsappLink(
+                    `Hi! I'm interested in the ${service.title} — could you share custom pricing details?`,
+                  ) || 'https://wa.me/919773732067'
+                }
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-full bg-[#128C46] px-3 py-1.5 text-xs font-bold tracking-wide text-white transition-all duration-200 hover:bg-[#0f7339] hover:shadow-lg hover:shadow-green-900/30"
+              >
+                <FaWhatsapp className="text-sm" />
+                Get Pricing
+              </a>
             </div>
           </motion.div>
         ))}

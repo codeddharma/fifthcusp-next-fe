@@ -95,7 +95,7 @@ export const HOME_CONTENT = {
     subtitle: "What you love, what you're good at, what you can be paid for, what the world needs",
     actions: [
       { label: 'Know More', href: '/know-more' },
-      { label: 'Experience', href: '/experiences' },
+      // { label: 'Experience', href: '/experiences' },
       { label: 'Affirm', href: '/contact' },
     ],
   },

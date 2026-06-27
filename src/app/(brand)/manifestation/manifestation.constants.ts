@@ -12,10 +12,10 @@ export const MANIFESTATION_CONTENT = {
   },
   gallery: {
     images: [
-      '/assets/manifestation-gallery-1.jpg',
-      '/assets/manifestation-gallery-2.jpg',
-      '/assets/manifestation-gallery-3.jpg',
-      '/assets/manifestation-gallery-4.jpg',
+      '/assets/manifestation-gallery-1.png',
+      '/assets/manifestation-gallery-2.png',
+      '/assets/manifestation-gallery-3.png',
+      '/assets/manifestation-gallery-4.png',
     ],
   },
   howItWorks: {
