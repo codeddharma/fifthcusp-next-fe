@@ -87,28 +87,40 @@ export const WEALTH_CONTENT = {
     title: 'SERVICES',
     items: [
       {
-        key: 'individual-wealth',
-        tag: 'Premium',
-        title: 'Individual Wealth Programme',
+        key: 'wealth-for-individuals',
+        title: 'Wealth for Individuals',
+        subtitle: 'For Everybody',
         description:
-          'Identify inborn wealth signatures, reprogram wealth beliefs, optimize behavior, environment, and energy, karmic clearing, ongoing optimization.',
-        price: 4999,
+          "Personalised wealth strategies, investment guidance, long-term financial roadmaps tailored to your goals. Maximizing your wealth potential. The first crore, key to building generational wealth, your dream home. For the first in the Bloodline. Lifelong Gains.",
       },
       {
         key: 'business-consulting',
-        tag: 'Consultation',
         title: 'Business Consulting',
+        subtitle: 'From Startups to Legacy Businesses',
+        badge: 'MOST CHOSEN',
         description:
-          'Tailored business strategy call with chart-based insights, decode blocks, pricing, branding, investor compatibility, execution plan.',
-        price: 2999,
+          'Strategic business consulting, growth planning, operational optimisation, leadership advisory and expansion strategies. One-on-one deep dive consultations. Aggressive ROI Maximization. Built to maximise profitability, scalability and long-term enterprise value. It can help you exit your business, and earn more than ever from it.',
       },
       {
         key: 'abundance-programme',
-        tag: 'Program',
         title: 'Abundance Programme',
+        subtitle: 'Exclusively for HNIs',
         description:
-          'Specific plans based on chart to maximize wealth. Guidance on finances, investments, and wealth creation strategies.',
-        price: 3999,
+          'A fully bespoke wealth and lifestyle advisory integrating investment strategy, real estate portfolio management, family wealth structuring, legacy & trust planning, and an aggressive wealth compounding approach. Designed to make you the 1%.',
+      },
+      {
+        key: 'wealth-for-creators',
+        title: 'Wealth for Creators',
+        subtitle: 'For Content Creators & Influencers',
+        description:
+          'An industry worth $250B - $310B with a CAGR of 23%. We provide strategies and money blueprints designed specifically for content creators, influencers, and digital entrepreneurs. There is no limit to this. Rahu wants you to have it all.',
+      },
+      {
+        key: 'wealth-for-performers',
+        title: 'Wealth for Performers',
+        subtitle: 'For Artists, Musicians & Celebrities',
+        description:
+          'Bespoke strategies for artists, musicians, actors, and public figures to scale it globally and unlock the most elevated versions of themselves. You can make your peak last forever. Art outlives the Artist.',
       },
     ],
   },

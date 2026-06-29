@@ -233,6 +233,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
         code: couponInput.trim(),
         serviceId: service._id,
         amount: finalPrice,
+        email: formData.email as string | undefined,
       })
       setAppliedCoupon(result)
     } catch (e: unknown) {

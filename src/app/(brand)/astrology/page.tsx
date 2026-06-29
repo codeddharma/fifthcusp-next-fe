@@ -25,13 +25,13 @@ export default function AstrologyPage() {
         page="astrology"
         title={ASTROLOGY_CONTENT.reports.basicTitle}
         subtitle={ASTROLOGY_CONTENT.reports.basicSubTitle}
-        type="report_basic"
+        type="reports_basic"
       />
       <AdvanceServiceSection
         page="astrology"
         title={ASTROLOGY_CONTENT.reports.advancedTitle}
         subtitle={ASTROLOGY_CONTENT.reports.advanceSubTitle}
-        type="report_basic"
+        type="reports_advanced"
       />
       <BasicServiceSection
         page="astrology"

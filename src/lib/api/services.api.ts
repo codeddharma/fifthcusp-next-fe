@@ -2,7 +2,7 @@ import api from './axiosInstance'
 import type { ServicesResponse } from '@/types/service.type'
 
 export async function fetchServices(
-  type: 'basic' | 'advanced' | 'consultation' | 'report_basic' | 'report_advanced' | 'numerology' | 'practice',
+  type: 'basic' | 'advanced' | 'consultation' | 'reports_basic' | 'reports_advanced' | 'numerology' | 'practice',
   page?: string
 ) {
   const res = await api.get<ServicesResponse>('/v1/services', {

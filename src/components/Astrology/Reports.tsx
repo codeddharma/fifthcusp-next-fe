@@ -6,8 +6,8 @@ import { ASTROLOGY_CONTENT } from '@/app/(brand)/astrology/astrology.constants'
 
 export default function ReportsSection() {
   useQuery({
-    queryKey: ['services', 'report_basic', 'astrology'],
-    queryFn: () => fetchServices('report_basic', 'astrology'),
+    queryKey: ['services', 'reports_basic', 'astrology'],
+    queryFn: () => fetchServices('reports_basic', 'astrology'),
   })
 
   return (

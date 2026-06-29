@@ -13,8 +13,8 @@ interface BasicServiceSectionProps {
     | 'basic'
     | 'advanced'
     | 'consultation'
-    | 'report_basic'
-    | 'report_advanced'
+    | 'reports_basic'
+    | 'reports_advanced'
     | 'numerology'
     | 'practice'
   subtitle?: string

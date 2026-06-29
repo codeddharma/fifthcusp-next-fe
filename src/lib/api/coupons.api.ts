@@ -12,6 +12,7 @@ export async function validateCoupon(params: {
   code: string
   serviceId: string
   customerId?: string
+  email?: string
   amount: number
 }): Promise<CouponValidationResult> {
   const res = await api.post<{ data: CouponValidationResult }>('/v1/coupons/validate', params)
