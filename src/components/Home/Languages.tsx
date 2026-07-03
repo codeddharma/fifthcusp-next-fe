@@ -26,10 +26,10 @@ export default function LanguagesSection() {
             href={LANGUAGE_ROUTES[service.name] ?? '/'}
             className="cosmic-glass group flex min-h-[260px] flex-col rounded-[20px] p-6 transition duration-300 hover:-translate-y-2 hover:bg-white/[0.08] hover:shadow-[0_15px_40px_rgba(138,43,226,0.25)]"
           >
-            <h3 className="mb-4 text-xl font-semibold uppercase tracking-wide text-white">
+            <h3 className="mb-4 text-center text-xl font-semibold uppercase tracking-wide text-white">
               {service.name}
             </h3>
-            <p className="flex-1 whitespace-pre-line text-sm leading-6 text-[#c4c4d8]">
+            <p className="flex-1 whitespace-pre-line text-justify text-sm leading-6 text-[#c4c4d8]">
               {service.desc}
             </p>
           </Link>
