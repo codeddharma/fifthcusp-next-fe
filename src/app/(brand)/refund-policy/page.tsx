@@ -73,8 +73,8 @@ export default function RefundPolicyPage() {
         <h2>4. How to Request a Refund</h2>
         <p>
           To request a refund or cancellation, email{' '}
-          <a href="mailto:support.thefifthcusp@gmail.com">
-            support.thefifthcusp@gmail.com
+          <a href="mailto:support@thefifthcusp.com">
+            support@thefifthcusp.com
           </a>{' '}
           with your order/booking details and reason. We aim to respond within 3
           business days.
@@ -94,8 +94,8 @@ export default function RefundPolicyPage() {
         <h2>6. Contact Us</h2>
         <p>
           For any questions about this policy, contact us at{' '}
-          <a href="mailto:support.thefifthcusp@gmail.com">
-            support.thefifthcusp@gmail.com
+          <a href="mailto:support@thefifthcusp.com">
+            support@thefifthcusp.com
           </a>{' '}
           or call <a href="tel:+919773732067">+91 97737 32067</a>.
           <br />

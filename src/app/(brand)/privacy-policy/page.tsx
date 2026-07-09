@@ -127,8 +127,8 @@ export default function PrivacyPolicyPage() {
         <h2>10. Contact Us</h2>
         <p>
           For any questions about this Privacy Policy, contact us at{' '}
-          <a href="mailto:support.thefifthcusp@gmail.com">
-            support.thefifthcusp@gmail.com
+          <a href="mailto:support@thefifthcusp.com">
+            support@thefifthcusp.com
           </a>{' '}
           or call <a href="tel:+919773732067">+91 97737 32067</a>.
           <br />

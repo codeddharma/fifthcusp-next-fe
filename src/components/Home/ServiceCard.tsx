@@ -16,11 +16,23 @@ export function ServiceCard({ service }: { service: Service }) {
 
   const anchorId = `service-${service.sku}`
 
-  // When the URL hash targets this card (e.g. from the header search), scroll to
-  // it and briefly highlight it. Handles both first load and same-page navigation.
+  // When the URL targets this card, focus it:
+  //  - hash `#service-<sku>` (e.g. from the header search) → scroll + highlight only
+  //  - query `?book=<sku>` (a shared booking link) → scroll + auto-open the BookingModal
+  // Handles both first load and same-page navigation.
   useEffect(() => {
     const focusIfMatches = () => {
-      if (typeof window === 'undefined' || window.location.hash !== `#${anchorId}`) return
+      if (typeof window === 'undefined') return
+
+      const bookSku = new URLSearchParams(window.location.search).get('book')
+      if (bookSku && bookSku.toUpperCase() === service.sku.toUpperCase()) {
+        const el = document.getElementById(anchorId)
+        el?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        setModalOpen(true)
+        return
+      }
+
+      if (window.location.hash !== `#${anchorId}`) return
       const el = document.getElementById(anchorId)
       if (!el) return
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -30,7 +42,7 @@ export function ServiceCard({ service }: { service: Service }) {
     focusIfMatches()
     window.addEventListener('hashchange', focusIfMatches)
     return () => window.removeEventListener('hashchange', focusIfMatches)
-  }, [anchorId])
+  }, [anchorId, service.sku])
 
   return (
     <>

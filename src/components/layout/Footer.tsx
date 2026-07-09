@@ -87,11 +87,11 @@ export default function Footer() {
 
           <div className="space-y-2 text-sm text-text-pearl">
             <a
-              href="mailto:support.thefifthcusp@gmail.com"
+              href="mailto:support@thefifthcusp.com"
               className="flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-brand-purple/10 hover:text-brand-purple"
             >
               <Mail size={16} />
-              support.thefifthcusp@gmail.com
+              support@thefifthcusp.com
             </a>
             <a
               href="tel:+919773732067"

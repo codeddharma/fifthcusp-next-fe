@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import Button from '@/components/common/Button'
 import DynamicFormField, { type FormFieldValue } from '@/components/booking/DynamicFormField'
 import FileUploadField from '@/components/booking/FileUploadField'
+import AddOnsSection, { addOnFieldName } from '@/components/booking/AddOnsSection'
 import { discountedPrice } from '@/lib/utils/pricing'
 import { whatsappLink } from '@/lib/whatsapp'
 import { openRazorpayCheckout } from '@/lib/razorpayHandler'
@@ -17,8 +18,9 @@ import {
   type CreateOrderResponse,
 } from '@/lib/api/orders.api'
 import { validateCoupon, type CouponValidationResult } from '@/lib/api/coupons.api'
+import { isValidPhoneNumber } from '@/lib/phone'
 import { useOrderStatusPolling } from '@/hooks/useOrderStatusPolling'
-import type { Service, FormInput } from '@/types/service.type'
+import type { Service, FormInput, AddOn } from '@/types/service.type'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -77,48 +79,67 @@ function StepIndicator({ step }: { step: Step }) {
 // ---------------------------------------------------------------------------
 // Validation
 // ---------------------------------------------------------------------------
+/** Validate a single form field. Returns an error message or null. */
+function fieldError(field: FormInput, val: FormFieldValue | undefined): string | null {
+  if (field.isRequired) {
+    if (field.type === 'multiSelect') {
+      if (!Array.isArray(val) || val.length === 0) return `${field.label} is required.`
+    } else if (val === undefined || val === null || val === '') {
+      return `${field.label} is required.`
+    }
+  }
+  if (field.type === 'number' && val !== '' && val !== undefined) {
+    const n = Number(val)
+    if (field.validation?.min !== undefined && n < field.validation.min)
+      return `Minimum value is ${field.validation.min}.`
+    if (field.validation?.max !== undefined && n > field.validation.max)
+      return `Maximum value is ${field.validation.max}.`
+  }
+  if (field.type === 'email' && val) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val))) return 'Enter a valid email address.'
+  }
+  if (field.type === 'phonenumber' && val) {
+    if (!isValidPhoneNumber(String(val))) return 'Enter a valid phone number.'
+  }
+  if (field.type === 'textarea' && val && field.validation?.maxLength) {
+    if (String(val).length > field.validation.maxLength)
+      return `Maximum ${field.validation.maxLength} characters allowed.`
+  }
+  return null
+}
+
 function validateForm(
   formInputs: FormInput[],
   formData: Record<string, FormFieldValue>,
   files: Record<string, File[]>,
   fileUploads: Service['fileUploads'],
+  selectedAddOns: AddOn[],
+  addOnForm: Record<string, Record<string, FormFieldValue>>,
+  addOnFiles: Record<string, Record<string, File[]>>,
 ): Record<string, string> {
   const errors: Record<string, string> = {}
 
   for (const field of formInputs) {
-    const val = formData[field.fieldKey]
-    if (field.isRequired) {
-      if (field.type === 'multiSelect') {
-        if (!Array.isArray(val) || val.length === 0)
-          errors[field.fieldKey] = `${field.label} is required.`
-      } else if (val === undefined || val === null || val === '') {
-        errors[field.fieldKey] = `${field.label} is required.`
-      }
-    }
-    if (field.type === 'number' && val !== '' && val !== undefined) {
-      const n = Number(val)
-      if (field.validation?.min !== undefined && n < field.validation.min)
-        errors[field.fieldKey] = `Minimum value is ${field.validation.min}.`
-      if (field.validation?.max !== undefined && n > field.validation.max)
-        errors[field.fieldKey] = `Maximum value is ${field.validation.max}.`
-    }
-    if (field.type === 'email' && val) {
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(val)))
-        errors[field.fieldKey] = 'Enter a valid email address.'
-    }
-    if (field.type === 'phonenumber' && val) {
-      if (!/^\d{10}$/.test(String(val)))
-        errors[field.fieldKey] = 'Enter a valid 10-digit phone number.'
-    }
-    if (field.type === 'textarea' && val && field.validation?.maxLength) {
-      if (String(val).length > field.validation.maxLength)
-        errors[field.fieldKey] = `Maximum ${field.validation.maxLength} characters allowed.`
-    }
+    const err = fieldError(field, formData[field.fieldKey])
+    if (err) errors[field.fieldKey] = err
   }
 
   for (const fu of fileUploads) {
     if (fu.isRequired && (!files[fu.fieldKey] || files[fu.fieldKey].length === 0))
       errors[fu.fieldKey] = `${fu.label} is required.`
+  }
+
+  // Selected add-ons validate their own nested inputs / uploads.
+  for (const addOn of selectedAddOns) {
+    for (const field of addOn.formInputs ?? []) {
+      const err = fieldError(field, addOnForm[addOn.key]?.[field.fieldKey])
+      if (err) errors[addOnFieldName(addOn.key, field.fieldKey)] = err
+    }
+    for (const fu of addOn.fileUploads ?? []) {
+      const list = addOnFiles[addOn.key]?.[fu.fieldKey]
+      if (fu.isRequired && (!list || list.length === 0))
+        errors[addOnFieldName(addOn.key, fu.fieldKey)] = `${fu.label} is required.`
+    }
   }
 
   return errors
@@ -138,6 +159,9 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
   const [direction, setDirection] = useState(1)
   const [formData, setFormData] = useState<Record<string, FormFieldValue>>({})
   const [files, setFiles] = useState<Record<string, File[]>>({})
+  const [selectedAddOnKeys, setSelectedAddOnKeys] = useState<string[]>([])
+  const [addOnForm, setAddOnForm] = useState<Record<string, Record<string, FormFieldValue>>>({})
+  const [addOnFiles, setAddOnFiles] = useState<Record<string, Record<string, File[]>>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [orderStatus, setOrderStatus] = useState<OrderStatus>(null)
   const [paying, setPaying] = useState(false)
@@ -171,9 +195,15 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
     },
   })
 
+  const addOns = service.addOns ?? []
+  const selectedAddOns = addOns.filter((a) => selectedAddOnKeys.includes(a.key))
+  const addOnsTotal = selectedAddOns.reduce((sum, a) => sum + a.price, 0)
+
+  // Mirror the backend: add-ons fold into the subtotal before the sale discount.
+  const subtotal = service.price + addOnsTotal
   const finalPrice = service.isInSale
-    ? discountedPrice(service.price, service.discountPercentage)
-    : service.price
+    ? discountedPrice(subtotal, service.discountPercentage)
+    : subtotal
 
   const sortedInputs = [...(service.formInputs ?? [])].sort((a, b) => a.order - b.order)
   const sortedUploads = [...(service.fileUploads ?? [])].sort((a, b) => a.order - b.order)
@@ -202,6 +232,9 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
         setDirection(1)
         setFormData({})
         setFiles({})
+        setSelectedAddOnKeys([])
+        setAddOnForm({})
+        setAddOnFiles({})
         setErrors({})
         setOrderStatus(null)
         setPaying(false)
@@ -245,8 +278,43 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
     }
   }
 
+  const clearError = (key: string) => {
+    if (errors[key]) setErrors((prev) => { const n = { ...prev }; delete n[key]; return n })
+  }
+
+  const toggleAddOn = (key: string, selected: boolean) => {
+    setSelectedAddOnKeys((prev) => (selected ? [...prev, key] : prev.filter((k) => k !== key)))
+    if (!selected) {
+      setAddOnForm((prev) => { const n = { ...prev }; delete n[key]; return n })
+      setAddOnFiles((prev) => { const n = { ...prev }; delete n[key]; return n })
+      setErrors((prev) => {
+        const n = { ...prev }
+        for (const k of Object.keys(n)) if (k.startsWith(`addon__${key}__`)) delete n[k]
+        return n
+      })
+    }
+  }
+
+  const handleAddOnFieldChange = (addOnKey: string, fieldKey: string, val: FormFieldValue) => {
+    setAddOnForm((prev) => ({ ...prev, [addOnKey]: { ...prev[addOnKey], [fieldKey]: val } }))
+    clearError(addOnFieldName(addOnKey, fieldKey))
+  }
+
+  const handleAddOnFileChange = (addOnKey: string, fieldKey: string, fileList: File[]) => {
+    setAddOnFiles((prev) => ({ ...prev, [addOnKey]: { ...prev[addOnKey], [fieldKey]: fileList } }))
+    clearError(addOnFieldName(addOnKey, fieldKey))
+  }
+
   const handleContinue = () => {
-    const errs = validateForm(sortedInputs, formData, files, sortedUploads)
+    const errs = validateForm(
+      sortedInputs,
+      formData,
+      files,
+      sortedUploads,
+      selectedAddOns,
+      addOnForm,
+      addOnFiles,
+    )
     if (Object.keys(errs).length > 0) {
       setErrors(errs)
       const messages = Object.values(errs)
@@ -327,10 +395,21 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
         )
         fd.append('quantity', '1')
         fd.append('formResponses', JSON.stringify(formData))
-        fd.append('selectedAddOns', JSON.stringify([]))
+        fd.append(
+          'selectedAddOns',
+          JSON.stringify(
+            selectedAddOnKeys.map((key) => ({ key, formResponses: addOnForm[key] ?? {} })),
+          ),
+        )
         if (appliedCoupon) fd.append('couponCode', appliedCoupon.code)
         for (const [key, fileList] of Object.entries(files)) {
           for (const file of fileList) fd.append(key, file)
+        }
+        // Add-on files use the "addon__<addOnKey>__<fieldKey>" multipart convention.
+        for (const addOnKey of selectedAddOnKeys) {
+          for (const [fieldKey, fileList] of Object.entries(addOnFiles[addOnKey] ?? {})) {
+            for (const file of fileList) fd.append(addOnFieldName(addOnKey, fieldKey), file)
+          }
         }
         placed = await createOrder(fd)
         setOrder(placed)
@@ -435,6 +514,17 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                       </div>
                     ))}
 
+                    <AddOnsSection
+                      addOns={addOns}
+                      selectedKeys={selectedAddOnKeys}
+                      onToggle={toggleAddOn}
+                      addOnForm={addOnForm}
+                      addOnFiles={addOnFiles}
+                      onFieldChange={handleAddOnFieldChange}
+                      onFileChange={handleAddOnFileChange}
+                      errors={errors}
+                    />
+
                     {sortedUploads.length > 0 && (
                       <div className="space-y-4 border-t border-white/10 pt-4">
                         {sortedUploads.map((fu) => (
@@ -470,8 +560,26 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                     <h2 className="mb-4 text-lg font-semibold text-white">Payment Summary</h2>
 
                     <div className="rounded-xl border border-white/10 bg-white/3 p-4">
-                      <p className="font-medium text-white">{service.title}</p>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <p className="font-medium text-white">{service.title}</p>
+                        <span className="shrink-0 text-sm text-white/60">
+                          ₹{service.price.toLocaleString('en-IN')}
+                        </span>
+                      </div>
                       <p className="mt-0.5 text-sm text-white/50">{service.subtitle}</p>
+
+                      {selectedAddOns.length > 0 && (
+                        <div className="mt-3 space-y-1.5 border-t border-white/10 pt-3">
+                          {selectedAddOns.map((a) => (
+                            <div key={a.key} className="flex items-baseline justify-between gap-3 text-sm">
+                              <span className="text-white/70">{a.label}</span>
+                              <span className="shrink-0 text-white/60">
+                                +₹{a.price.toLocaleString('en-IN')}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
 
                       <div className="mt-4 flex items-baseline gap-3">
                         <span className="text-3xl font-bold text-white">
@@ -479,7 +587,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                         </span>
                         {service.isInSale && (
                           <span className="text-sm text-white/35 line-through">
-                            ₹{service.price.toLocaleString('en-IN')}
+                            ₹{subtotal.toLocaleString('en-IN')}
                           </span>
                         )}
                         {service.isInSale && (
@@ -550,10 +658,24 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                           <CheckCircle2 size={64} className="text-emerald-400" />
                         </motion.div>
                         <h2 className="mt-5 text-2xl font-bold text-white">Booking Confirmed!</h2>
-                        <p className="mt-2 max-w-xs text-sm text-white/55">
-                          Thank you for booking <span className="text-white">{service.title}</span>.
-                          We&apos;ll be in touch shortly to coordinate your session.
-                        </p>
+                        <div className="mt-2 flex max-w-sm flex-col gap-2 text-sm leading-relaxed text-white/55">
+                          <p>
+                            Thank you for booking <span className="text-white">&quot;{service.title}&quot;</span>.
+                            A booking confirmation has been sent to your email address.
+                            {service.requiresConsultation && service.requiresOutputFile
+                              ? ' You will also receive a separate email containing a link to schedule your preferred time slot for the consultation, and your personalized PDF report will be delivered via email once it has been prepared.'
+                              : service.requiresConsultation
+                                ? ' You will also receive a separate email containing a link to schedule your preferred time slot for the consultation.'
+                                : service.requiresOutputFile
+                                  ? ' Your personalized PDF report will be delivered via email once it has been prepared.'
+                                  : ''}
+                          </p>
+                          <p>
+                            {service.requiresConsultation
+                              ? 'If you do not see these emails in your inbox, please check your Spam or Junk folder as well.'
+                              : 'If you do not see our emails in your inbox, please check your Spam or Junk folder as well.'}
+                          </p>
+                        </div>
                         <Button className="mt-8 w-full" onClick={onClose}>
                           Close
                         </Button>

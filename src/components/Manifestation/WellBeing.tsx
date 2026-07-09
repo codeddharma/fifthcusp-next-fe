@@ -76,8 +76,8 @@ export default function WellBeing() {
                 key={i}
                 className="rounded-2xl border border-[#a855f7]/20 bg-[#a855f7]/5 p-5"
               >
-                <h5 className="mb-3 text-sm font-bold text-[#a855f7]">{scale.title}</h5>
-                <p className="text-xs leading-6 text-[#c4b5fd]">{scale.content}</p>
+                <h5 className="mb-3 text-center text-base font-bold text-[#a855f7] sm:text-lg">{scale.title}</h5>
+                <p className="text-justify text-xs leading-6 text-[#c4b5fd]">{scale.content}</p>
               </div>
             ))}
           </div>

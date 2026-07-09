@@ -110,8 +110,8 @@ export default function TermsAndConditionsPage() {
         <h2>10. Contact Us</h2>
         <p>
           For questions about these Terms &amp; Conditions, contact us at{' '}
-          <a href="mailto:support.thefifthcusp@gmail.com">
-            support.thefifthcusp@gmail.com
+          <a href="mailto:support@thefifthcusp.com">
+            support@thefifthcusp.com
           </a>{' '}
           or call <a href="tel:+919773732067">+91 97737 32067</a>.
           <br />

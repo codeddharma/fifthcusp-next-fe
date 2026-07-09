@@ -26,6 +26,25 @@ export const VASTU_CONTENT = {
   services: {
     basicTitle: 'Basic Services',
   },
+  tailoredServices: {
+    title: 'INDUSTRIAL & INSTITUTIONAL VASTU',
+    items: [
+      {
+        key: 'industrial-vastu',
+        title: 'Industrial Vastu Services',
+        subtitle: 'Factories, Plants & Warehouses',
+        description:
+          'Energy-balanced layouts for factories, manufacturing plants, and warehouses that optimise production flow, machinery placement, storage zones, and workforce well-being. We correct heavy-utility zones, geopathic stress, and structural imbalances without demolition or remodelling, so operations run with fewer disruptions and stronger financial momentum.',
+      },
+      {
+        key: 'institutional-vastu',
+        title: 'Institutional Vastu Services',
+        subtitle: 'Schools, Hospitals & Public Institutions',
+        description:
+          'Vastu planning for schools, hospitals, corporate campuses, and public institutions where a single space serves many people at once. We harmonise entrances, functional zones, and the Brahmasthaan to support focus, healing, harmony, and sustained growth for everyone who occupies the space.',
+      },
+    ],
+  },
   faqs: {
     title: 'FAQs',
     subtitle: 'Everything you need to know about Vastu',

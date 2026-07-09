@@ -28,8 +28,8 @@ export default function ContactPage() {
         <ul>
           <li>
             <strong>Email:</strong>{' '}
-            <a href="mailto:support.thefifthcusp@gmail.com">
-              support.thefifthcusp@gmail.com
+            <a href="mailto:support@thefifthcusp.com">
+              support@thefifthcusp.com
             </a>
           </li>
           <li>

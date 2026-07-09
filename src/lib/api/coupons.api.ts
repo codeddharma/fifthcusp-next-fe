@@ -4,6 +4,7 @@ export interface CouponValidationResult {
   code: string
   discountType: 'percentage' | 'flat'
   discountValue: number
+  maxDiscount?: number
   discountAmount: number
   finalAmount: number
 }
