@@ -17,14 +17,14 @@ export default function TarotPage() {
     <>
       <TarotHero />
       <TheIntuitive />
-      <BasicServiceSection page="tarot" title={TAROT_CONTENT.services.title} />
+      <BasicServiceSection page="tarot-reading" title={TAROT_CONTENT.services.title} />
       <AdvanceServiceSection
-        page="tarot"
+        page="tarot-reading"
         title={TAROT_CONTENT.advancedServices.title}
         subtitle={TAROT_CONTENT.advancedServices.subtitle}
       />
       <FAQSection
-        page="tarot"
+        page="tarot-reading"
         title={TAROT_CONTENT.faqs.title}
         subtitle={TAROT_CONTENT.faqs.subtitle}
       />
