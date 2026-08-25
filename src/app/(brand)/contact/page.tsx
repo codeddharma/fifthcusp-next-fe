@@ -55,7 +55,7 @@ export default function ContactPage() {
           </li>
           <li>
             <a
-              href="https://www.linkedin.com/in/the-fifth-cusp-55258a418/"
+              href="https://www.linkedin.com/company/the-fifth-cusp"
               target="_blank"
               rel="noreferrer"
             >
