@@ -4,6 +4,7 @@ import { Check } from 'lucide-react'
 import DynamicFormField, { type FormFieldValue } from '@/components/booking/DynamicFormField'
 import FileUploadField from '@/components/booking/FileUploadField'
 import type { AddOn } from '@/types/service.type'
+import { formatINR } from '@/lib/utils/pricing'
 
 /** Namespaced key/id for an add-on's nested field, matching the backend file convention. */
 export const addOnFieldName = (addOnKey: string, fieldKey: string) =>
@@ -65,7 +66,7 @@ export default function AddOnsSection({
                 <span className="flex items-baseline justify-between gap-3">
                   <span className="text-sm font-medium text-white">{addOn.label}</span>
                   <span className="shrink-0 text-sm font-semibold text-brand-purple">
-                    +₹{addOn.price.toLocaleString('en-IN')}
+                    +₹{formatINR(addOn.price)}
                   </span>
                 </span>
                 {addOn.description && (

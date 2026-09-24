@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Card from '@/components/common/Card'
 import Button from '@/components/common/Button'
 import BookingModal from '@/components/booking/BookingModal'
-import { discountedPrice } from '@/lib/utils/pricing'
+import { formatINR, listPrice } from '@/lib/utils/pricing'
 import { whatsappLink } from '@/lib/whatsapp'
 import type { Service } from '@/types/service.type'
 
@@ -12,7 +12,7 @@ export function ServiceCard({ service }: { service: Service }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [highlighted, setHighlighted] = useState(false)
   const { title, subtitle, description, price, isInSale, saleTitle, discountPercentage } = service
-  const finalPrice = isInSale ? discountedPrice(price, discountPercentage) : price
+  const mrp = listPrice(service)
 
   const anchorId = `service-${service.sku}`
 
@@ -56,7 +56,7 @@ export function ServiceCard({ service }: { service: Service }) {
         {isInSale && (
           <div className="absolute right-0 top-0 h-24 w-24 overflow-hidden">
             <span className="absolute right-[-28px] top-[18px] w-[110px] rotate-45 bg-gradient-to-r from-purple-600 to-fuchsia-500 py-1 text-center text-[10px] font-bold tracking-widest text-white shadow-md shadow-purple-900/50">
-              {saleTitle?.toUpperCase() ?? `${discountPercentage}% OFF`}
+              {saleTitle ? saleTitle.toUpperCase() : `${Math.round(discountPercentage)}% OFF`}
             </span>
           </div>
         )}
@@ -71,11 +71,11 @@ export function ServiceCard({ service }: { service: Service }) {
         <div className="flex items-center justify-between gap-4 pt-2">
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-white">
-              ₹{finalPrice.toLocaleString('en-IN')}
+              ₹{formatINR(price)}
             </span>
-            {isInSale && (
+            {mrp > price && (
               <span className="text-sm text-white/40 line-through">
-                ₹{price.toLocaleString('en-IN')}
+                ₹{formatINR(mrp)}
               </span>
             )}
           </div>

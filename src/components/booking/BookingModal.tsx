@@ -8,7 +8,7 @@ import Button from '@/components/common/Button'
 import DynamicFormField, { type FormFieldValue } from '@/components/booking/DynamicFormField'
 import FileUploadField from '@/components/booking/FileUploadField'
 import AddOnsSection, { addOnFieldName } from '@/components/booking/AddOnsSection'
-import { discountedPrice } from '@/lib/utils/pricing'
+import { formatINR, listPrice, roundMoney } from '@/lib/utils/pricing'
 import { whatsappLink } from '@/lib/whatsapp'
 import { openRazorpayCheckout } from '@/lib/razorpayHandler'
 import {
@@ -199,11 +199,10 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
   const selectedAddOns = addOns.filter((a) => selectedAddOnKeys.includes(a.key))
   const addOnsTotal = selectedAddOns.reduce((sum, a) => sum + a.price, 0)
 
-  // Mirror the backend: add-ons fold into the subtotal before the sale discount.
-  const subtotal = service.price + addOnsTotal
-  const finalPrice = service.isInSale
-    ? discountedPrice(subtotal, service.discountPercentage)
-    : subtotal
+  // Mirror the backend: `price` is already the sale price, add-ons are charged in full.
+  const mrp = listPrice(service)
+  const finalPrice = roundMoney(service.price + addOnsTotal)
+  const savings = roundMoney(Math.max(0, mrp - service.price))
 
   const sortedInputs = [...(service.formInputs ?? [])].sort((a, b) => a.order - b.order)
   const sortedUploads = [...(service.fileUploads ?? [])].sort((a, b) => a.order - b.order)
@@ -563,7 +562,10 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                       <div className="flex items-baseline justify-between gap-3">
                         <p className="font-medium text-white">{service.title}</p>
                         <span className="shrink-0 text-sm text-white/60">
-                          ₹{service.price.toLocaleString('en-IN')}
+                          {savings > 0 && (
+                            <span className="mr-1.5 text-white/35 line-through">₹{formatINR(mrp)}</span>
+                          )}
+                          ₹{formatINR(service.price)}
                         </span>
                       </div>
                       <p className="mt-0.5 text-sm text-white/50">{service.subtitle}</p>
@@ -574,7 +576,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                             <div key={a.key} className="flex items-baseline justify-between gap-3 text-sm">
                               <span className="text-white/70">{a.label}</span>
                               <span className="shrink-0 text-white/60">
-                                +₹{a.price.toLocaleString('en-IN')}
+                                +₹{formatINR(a.price)}
                               </span>
                             </div>
                           ))}
@@ -583,16 +585,16 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
 
                       <div className="mt-4 flex items-baseline gap-3">
                         <span className="text-3xl font-bold text-white">
-                          ₹{finalPrice.toLocaleString('en-IN')}
+                          ₹{formatINR(finalPrice)}
                         </span>
-                        {service.isInSale && (
+                        {savings > 0 && (
                           <span className="text-sm text-white/35 line-through">
-                            ₹{subtotal.toLocaleString('en-IN')}
+                            ₹{formatINR(roundMoney(finalPrice + savings))}
                           </span>
                         )}
-                        {service.isInSale && (
+                        {savings > 0 && (
                           <span className="rounded-full bg-brand-purple/20 px-2 py-0.5 text-xs font-medium text-brand-purple">
-                            {service.discountPercentage}% off
+                            You save ₹{formatINR(savings)}
                           </span>
                         )}
                       </div>
@@ -620,7 +622,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                     {appliedCoupon && (
                       <div className="mt-2 flex items-center justify-between rounded-lg bg-emerald-500/10 px-3 py-2 text-sm">
                         <span className="text-emerald-400">Coupon <span className="font-mono font-semibold">{appliedCoupon.code}</span> applied!</span>
-                        <span className="font-semibold text-emerald-400">−₹{appliedCoupon.discountAmount.toLocaleString('en-IN')}</span>
+                        <span className="font-semibold text-emerald-400">−₹{formatINR(appliedCoupon.discountAmount)}</span>
                       </div>
                     )}
 
@@ -743,7 +745,7 @@ export default function BookingModal({ service, open, onClose }: BookingModalPro
                           Processing…
                         </span>
                       ) : (
-                        `Pay ₹${(appliedCoupon ? appliedCoupon.finalAmount : finalPrice).toLocaleString('en-IN')}`
+                        `Pay ₹${formatINR(appliedCoupon ? appliedCoupon.finalAmount : finalPrice)}`
                       )}
                     </Button>
                   </div>

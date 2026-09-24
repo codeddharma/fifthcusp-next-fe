@@ -56,6 +56,9 @@ export interface Service {
   title: string
   subtitle: string
   description: string
+  /** List price (MRP), shown struck-through when above `price`. Absent on legacy records. */
+  mrp?: number
+  /** Sale / offer price — what the customer pays. */
   price: number
   type: string
   pages: ServicePage[]
